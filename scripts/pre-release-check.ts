@@ -74,8 +74,16 @@ async function checkGitClean(): Promise<boolean | string> {
     const { stdout } = await execa("git", ["status", "--porcelain"], {
       stdio: "pipe",
     });
-    if (stdout.trim()) {
-      return "You have uncommitted changes. Commit or stash them before releasing.";
+
+    // Filter out changeset files - they're expected to be uncommitted during release
+    const uncommittedFiles = stdout
+      .trim()
+      .split("\n")
+      .filter(line => line.trim())
+      .filter(line => !line.includes(".changeset/"));
+
+    if (uncommittedFiles.length > 0) {
+      return `You have uncommitted changes (excluding changesets). Commit or stash them before releasing:\n${uncommittedFiles.join("\n")}`;
     }
     return true;
   } catch {
