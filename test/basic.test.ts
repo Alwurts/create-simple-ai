@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, it } from "vitest";
+import { afterEach, describe, it } from "vitest";
 import {
   cleanupSmokeDirectory,
   expectSuccess,
@@ -9,12 +9,9 @@ import {
 } from "./test-utils.js";
 
 describe("Basic Project Creation", () => {
-  beforeAll(async () => {
-    await cleanupSmokeDirectory();
-  });
-
-  afterAll(async () => {
-    await cleanupSmokeDirectory();
+  afterEach(async () => {
+    await cleanupSmokeDirectory("default-app");
+    await cleanupSmokeDirectory("my-explicit-app");
   });
 
   it("should create a project with default options", async () => {

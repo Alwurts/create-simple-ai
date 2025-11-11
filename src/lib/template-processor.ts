@@ -13,6 +13,10 @@ Handlebars.registerHelper("version", (versions, key) => {
   }
   return versions[key] || "";
 });
+// Raw content helper - outputs content without processing
+Handlebars.registerHelper("raw", function (this: unknown, options: Handlebars.HelperOptions) {
+  return options.fn(this);
+});
 
 // Binary file extensions that shouldn't be processed
 const BINARY_EXTENSIONS = new Set([".png", ".ico", ".svg", ".jpg", ".jpeg"]);
@@ -55,7 +59,7 @@ export async function processTemplates(
   }
 }
 
-export async function processTemplate(
+async function processTemplate(
   sourcePath: string,
   destPath: string,
   context: TemplateContext,

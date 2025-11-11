@@ -63,44 +63,60 @@ export const PACKAGE_MANAGER_COMMANDS: Record<
  */
 export const PACKAGE_VERSIONS = {
   // Core Next.js
-  next: "^15.0.0",
-  react: "^18.3.0",
-  "react-dom": "^18.3.0",
-  "@types/react": "^18.3.0",
-  "@types/react-dom": "^18.3.0",
-  "@types/node": "^24.10.0",
-  typescript: "^5.9.3",
+  next: "15.5.2",
+  react: "19.1.0",
+  "react-dom": "19.1.0",
+  "@types/react": "^19",
+  "@types/react-dom": "^19",
+  "@types/node": "^20",
+  typescript: "^5",
 
   // UI Components (Shadcn)
-  "@radix-ui/react-slot": "^1.0.0",
-  "class-variance-authority": "^0.7.0",
-  clsx: "^2.0.0",
-  "lucide-react": "^0.294.0",
-  "tailwind-merge": "^2.0.0",
-  "tailwindcss-animate": "^1.0.7",
+  "@radix-ui/react-slot": "^1.2.3",
+  "@radix-ui/react-checkbox": "^1.3.3",
+  "@radix-ui/react-dialog": "^1.1.15",
+  "@radix-ui/react-label": "^2.1.7",
+  "class-variance-authority": "^0.7.1",
+  clsx: "^2.1.1",
+  "lucide-react": "^0.542.0",
+  "tailwind-merge": "^3.3.1",
 
   // Styling
-  tailwindcss: "^3.4.0",
-  autoprefixer: "^10.4.16",
+  tailwindcss: "^4",
+  "@tailwindcss/postcss": "^4",
   postcss: "^8.4.32",
+  "next-themes": "^0.4.6",
+  "tw-animate-css": "^1.3.8",
 
   // Database (Drizzle)
-  "drizzle-orm": "^0.29.0",
-  "drizzle-kit": "^0.20.0",
+  "drizzle-orm": "^0.44.5",
+  "drizzle-kit": "^0.31.4",
   // Database drivers
-  pg: "^8.14.1",
-  "@types/pg": "^8.11.11",
+  pg: "^8.16.3",
+  "@types/pg": "^8.15.5",
   mysql2: "^3.11.0",
   "@libsql/client": "^0.14.0",
 
   // Auth
-  "better-auth": "^0.2.0",
+  "better-auth": "^1.3.7",
 
   // API Framework
-  hono: "^4.0.0",
+  hono: "^4.9.6",
+  "@hono/zod-validator": "^0.7.2",
+
+  // Forms & Validation
+  "react-hook-form": "^7.62.0",
+  "@hookform/resolvers": "^5.2.1",
+  zod: "^4.1.5",
+
+  // State Management
+  "@tanstack/react-query": "^5.85.9",
+
+  // Notifications
+  sonner: "^2.0.7",
 
   // Tooling
-  "@biomejs/biome": "^2.3.4",
+  "@biomejs/biome": "2.2.0",
 } as const;
 
 export type AvailableDependencies = keyof typeof PACKAGE_VERSIONS;

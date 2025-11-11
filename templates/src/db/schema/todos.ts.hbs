@@ -1,0 +1,67 @@
+{{#if (eq database "postgres")}}
+import { pgTable } from "drizzle-orm/pg-core";
+{{else if (eq database "mysql")}}
+import { mysqlTable } from "drizzle-orm/mysql-core";
+{{else if (eq database "sqlite")}}
+import { sqliteTable } from "drizzle-orm/sqlite-core";
+{{/if}}
+import { user } from "./auth";
+
+{{#if (eq database "postgres")}}
+export const todo = pgTable("todo", (t) => ({
+	id: t.uuid("id").primaryKey().defaultRandom(),
+	title: t.text("title").notNull(),
+	description: t.text("description"),
+	completed: t.boolean("completed").default(false).notNull(),
+	userId: t
+		.text("user_id")
+		.notNull()
+		.references(() => user.id, { onDelete: "cascade" }),
+	createdAt: t
+		.timestamp("created_at", { mode: "string" })
+		.defaultNow()
+		.notNull(),
+	updatedAt: t
+		.timestamp("updated_at", { mode: "string" })
+		.defaultNow()
+		.notNull(),
+}));
+{{else if (eq database "mysql")}}
+export const todo = mysqlTable("todo", (t) => ({
+	id: t.varchar("id", { length: 36 }).primaryKey().defaultRandom(),
+	title: t.text("title").notNull(),
+	description: t.text("description"),
+	completed: t.boolean("completed").default(false).notNull(),
+	userId: t
+		.text("user_id")
+		.notNull()
+		.references(() => user.id, { onDelete: "cascade" }),
+	createdAt: t
+		.timestamp("created_at", { mode: "string" })
+		.defaultNow()
+		.notNull(),
+	updatedAt: t
+		.timestamp("updated_at", { mode: "string" })
+		.defaultNow()
+		.notNull(),
+}));
+{{else if (eq database "sqlite")}}
+export const todo = sqliteTable("todo", (t) => ({
+	id: t.text("id").primaryKey().defaultRandom(),
+	title: t.text("title").notNull(),
+	description: t.text("description"),
+	completed: t.integer("completed", { mode: "boolean" }).default(false).notNull(),
+	userId: t
+		.text("user_id")
+		.notNull()
+		.references(() => user.id, { onDelete: "cascade" }),
+	createdAt: t
+		.text("created_at")
+		.defaultNow()
+		.notNull(),
+	updatedAt: t
+		.text("updated_at")
+		.defaultNow()
+		.notNull(),
+}));
+{{/if}}

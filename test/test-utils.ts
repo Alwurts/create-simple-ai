@@ -21,12 +21,15 @@ export interface TestConfig extends CLIOptions {
 /**
  * Clean up the entire .smoke directory
  */
-export async function cleanupSmokeDirectory(): Promise<void> {
-  const smokeDir = join(process.cwd(), ".smoke");
+export async function cleanupSmokeDirectory(projectName?: string): Promise<void> {
+  const smokeDir = projectName
+    ? join(process.cwd(), ".smoke", projectName)
+    : join(process.cwd(), ".smoke");
   try {
     await rm(smokeDir, { recursive: true, force: true });
-  } catch {
-    // Ignore cleanup errors
+  } catch (error) {
+    // Ignore cleanup errors but log them for debugging
+    console.warn(`Cleanup warning for ${smokeDir}: ${error}`);
   }
 }
 
@@ -35,7 +38,7 @@ export async function cleanupSmokeDirectory(): Promise<void> {
  * This is simpler than subprocess execution and tests the actual code
  */
 export async function runTest(config: TestConfig): Promise<TestResult> {
-  const smokeDir = join(process.cwd(), ".smoke");
+  const smokeDir = join(process.cwd(), ".smoke", config.projectName);
   const projectDir = join(smokeDir, config.projectName);
 
   try {
@@ -65,6 +68,7 @@ export async function runTest(config: TestConfig): Promise<TestResult> {
       config,
     };
   } catch (error) {
+    console.error(`Test failed for ${config.projectName}:`, error);
     return {
       success: false,
       error: error instanceof Error ? error.message : String(error),
@@ -137,8 +141,8 @@ export async function validatePackageJson(
   expect(packageJson.name).toBe(expectedName);
   expect(packageJson.private).toBe(true);
   expect(packageJson.scripts).toBeDefined();
-  expect(packageJson.scripts.dev).toBe("next dev");
-  expect(packageJson.scripts.build).toBe("next build");
+  expect(packageJson.scripts.dev).toBe("next dev --turbopack");
+  expect(packageJson.scripts.build).toBe("next build --turbopack");
 
   // Check database-specific dependencies
   if (expectedDatabase === "postgres") {
@@ -176,12 +180,12 @@ export async function validateDatabaseConfig(projectDir: string, database: strin
  * Validate auth setup
  */
 export async function validateAuthSetup(projectDir: string): Promise<void> {
-  await expectFileExists(projectDir, "lib/auth/config.ts");
-  await expectFileExists(projectDir, "lib/auth/client.ts");
-  await expectFileExists(projectDir, "app/api/auth/[...all]/route.ts");
+  await expectFileExists(projectDir, "lib/auth.ts");
+  await expectFileExists(projectDir, "lib/auth-client.ts");
+  await expectFileExists(projectDir, "db/schema/auth.ts");
 
   // Check auth config imports better-auth
-  await expectFileContains(projectDir, "lib/auth/config.ts", "better-auth");
+  await expectFileContains(projectDir, "lib/auth.ts", "better-auth");
 }
 
 /**
@@ -192,20 +196,15 @@ export async function validateProjectStructure(projectDir: string): Promise<void
   await expectFileExists(projectDir, "package.json");
   await expectFileExists(projectDir, "tsconfig.json");
   await expectFileExists(projectDir, "README.md");
-
-  // Config files
-  await expectFileExists(projectDir, "tailwind.config.js");
-  await expectFileExists(projectDir, "postcss.config.js");
-  await expectFileExists(projectDir, "biome.json");
-  await expectFileExists(projectDir, "components.json");
+  await expectFileExists(projectDir, ".env.example");
+  await expectFileExists(projectDir, ".gitignore");
 
   // Next.js files
-  await expectFileExists(projectDir, "next.config.ts");
   await expectFileExists(projectDir, "app/layout.tsx");
-  await expectFileExists(projectDir, "app/page.tsx");
+  await expectFileExists(projectDir, "app/(protected)/page.tsx");
   await expectFileExists(projectDir, "app/globals.css");
 
   // Library files
   await expectFileExists(projectDir, "lib/utils.ts");
-  await expectFileExists(projectDir, "lib/api/index.ts");
+  await expectFileExists(projectDir, "lib/config.ts");
 }
