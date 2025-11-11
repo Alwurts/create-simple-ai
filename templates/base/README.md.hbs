@@ -1,0 +1,68 @@
+# {{projectName}}
+
+A modern full-stack application created with create-simple-ai.
+
+## Getting Started
+
+First, install dependencies:
+
+```bash
+npm install
+# or
+pnpm install
+# or
+bun install
+```
+
+Then, run the development server:
+
+```bash
+npm run dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Tech Stack
+
+- **Framework**: Next.js 15
+- **Styling**: Tailwind CSS + Shadcn/ui
+- **Database**: {{database}} with Drizzle ORM
+- **Authentication**: {{#if (eq auth "better-auth")}}Better Auth{{else}}Custom{{/if}}
+- **API**: Hono.js
+- **Linting**: Biome
+
+## Project Structure
+
+```
+{{projectName}}/
+├── app/                 # Next.js app directory
+├── components/          # Reusable UI components
+├── lib/                 # Utility functions
+├── db/                  # Database schemas and connections
+├── auth/                # Authentication configuration
+└── api/                 # API routes
+```
+
+## Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run db:generate` - Generate database schema
+- `npm run db:migrate` - Run database migrations
+- `npm run db:studio` - Open Drizzle Studio
+
+## Learn More
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Shadcn/ui](https://ui.shadcn.com/)
+- [Drizzle ORM](https://orm.drizzle.team/)
+- [Better Auth](https://www.better-auth.com/)
+- [Hono.js](https://hono.dev/)
+
+This project was created with [create-simple-ai](https://github.com/your-repo/create-simple-ai).
