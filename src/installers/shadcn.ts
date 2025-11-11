@@ -1,45 +1,35 @@
 import path from "node:path";
 import fs from "fs-extra";
-import type { Installer } from "../types.js";
+import { PACKAGE_VERSIONS, PKG_ROOT } from "../lib/config.js";
+import { processTemplate } from "../lib/template-processor.js";
+import type { Installer, TemplateContext } from "../types.js";
 
+/**
+ * Shadcn installer - processes Shadcn config and utils templates
+ * All file content is defined in templates/config/ and templates/lib/
+ */
 export const shadcnInstaller: Installer = async config => {
-  // Create components.json for Shadcn/ui
-  const componentsJson = {
-    $schema: "https://ui.shadcn.com/schema.json",
-    style: "default",
-    rsc: true,
-    tsx: true,
-    tailwind: {
-      config: "tailwind.config.js",
-      css: "app/globals.css",
-      baseColor: "slate",
-      cssVariables: true,
-      prefix: "",
-    },
-    aliases: {
-      components: "@/components",
-      utils: "@/lib/utils",
-    },
+  const configTemplateDir = path.join(PKG_ROOT, "templates/config");
+  const libTemplateDir = path.join(PKG_ROOT, "templates/lib");
+  const context: TemplateContext = {
+    ...config,
+    packageManagerCommand: config.packageManager,
+    versions: PACKAGE_VERSIONS as Record<string, string>,
   };
 
-  await fs.writeFile(
+  // Process components.json template
+  await processTemplate(
+    path.join(configTemplateDir, "components.json.hbs"),
     path.join(config.projectDir, "components.json"),
-    JSON.stringify(componentsJson, null, 2),
+    context,
   );
 
-  // Create basic lib/utils.ts
-  const utilsDir = path.join(config.projectDir, "lib");
-  await fs.ensureDir(utilsDir);
-
-  const utilsContent = `import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-`;
-
-  await fs.writeFile(path.join(utilsDir, "utils.ts"), utilsContent);
+  // Process lib/utils.ts template
+  await processTemplate(
+    path.join(libTemplateDir, "utils.ts.hbs"),
+    path.join(config.projectDir, "lib/utils.ts"),
+    context,
+  );
 
   // Create components directory
   await fs.ensureDir(path.join(config.projectDir, "components"));

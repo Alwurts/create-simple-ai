@@ -6,6 +6,13 @@ import type { TemplateContext } from "../types.js";
 // Register custom helpers
 Handlebars.registerHelper("eq", (a, b) => a === b);
 Handlebars.registerHelper("includes", (arr, item) => Array.isArray(arr) && arr.includes(item));
+// Helper to access versions object with special characters in keys
+Handlebars.registerHelper("version", (versions, key) => {
+  if (!versions || typeof versions !== "object") {
+    return "";
+  }
+  return versions[key] || "";
+});
 
 // Binary file extensions that shouldn't be processed
 const BINARY_EXTENSIONS = new Set([".png", ".ico", ".svg", ".jpg", ".jpeg"]);

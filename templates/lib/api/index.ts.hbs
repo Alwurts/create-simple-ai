@@ -1,0 +1,13 @@
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+
+export function createHonoApp() {
+  const app = new Hono();
+
+  // Add CORS middleware
+  app.use('*', cors());
+
+  return app;
+}
+
+

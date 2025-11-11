@@ -1,15 +1,11 @@
 import { z } from "zod";
 
 export const FRAMEWORKS = ["nextjs"] as const;
-export const DATABASES = ["postgres"] as const;
-export const AUTHS = ["better-auth", "none"] as const;
-export const EXAMPLES = ["todo", "none"] as const;
+export const DATABASES = ["postgres", "mysql", "sqlite"] as const;
 export const PACKAGE_MANAGERS = ["npm", "pnpm", "bun"] as const;
 
 export const FrameworkSchema = z.enum(FRAMEWORKS);
 export const DatabaseSchema = z.enum(DATABASES);
-export const AuthSchema = z.enum(AUTHS);
-export const ExampleSchema = z.enum(EXAMPLES);
 export const PackageManagerSchema = z.enum(PACKAGE_MANAGERS);
 
 export const ProjectNameSchema = z
@@ -29,15 +25,11 @@ export const ProjectNameSchema = z
 
 export type Framework = z.infer<typeof FrameworkSchema>;
 export type Database = z.infer<typeof DatabaseSchema>;
-export type Auth = z.infer<typeof AuthSchema>;
-export type Example = z.infer<typeof ExampleSchema>;
 export type PackageManager = z.infer<typeof PackageManagerSchema>;
 
 export interface CLIOptions {
   projectName?: string;
   database?: Database;
-  auth?: Auth;
-  examples?: Example[];
   git?: boolean;
   install?: boolean;
   packageManager?: PackageManager;
@@ -51,8 +43,6 @@ export const ProjectConfigSchema = z.object({
   projectDir: z.string(),
   framework: FrameworkSchema,
   database: DatabaseSchema,
-  auth: AuthSchema,
-  examples: z.array(ExampleSchema),
   git: z.boolean(),
   install: z.boolean(),
   packageManager: PackageManagerSchema,
@@ -62,4 +52,5 @@ export type Installer = (config: ProjectConfig) => Promise<void>;
 
 export interface TemplateContext extends ProjectConfig {
   packageManagerCommand: PackageManager;
+  versions: Record<string, string>;
 }

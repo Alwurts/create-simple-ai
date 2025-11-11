@@ -1,24 +1,20 @@
 import path from "node:path";
-import { LIBRARY_DEPENDENCIES, PKG_ROOT } from "../lib/config.js";
-import { addDependencies } from "../lib/dependency-installer.js";
+import { PACKAGE_VERSIONS, PKG_ROOT } from "../lib/config.js";
 import { processTemplates } from "../lib/template-processor.js";
-import type { Installer } from "../types.js";
+import type { Installer, TemplateContext } from "../types.js";
 
+/**
+ * Next.js installer - processes Next.js framework templates
+ * Dependencies are managed via package.json template, no need to add them here
+ * All file content is defined in templates/frameworks/nextjs/
+ */
 export const nextjsInstaller: Installer = async config => {
-  // Add Next.js dependencies
-  await addDependencies(config.projectDir, config.packageManager, LIBRARY_DEPENDENCIES.nextjs.deps);
-
-  await addDependencies(
-    config.projectDir,
-    config.packageManager,
-    LIBRARY_DEPENDENCIES.nextjs.devDeps,
-    true, // dev dependencies
-  );
-
   // Process Next.js templates
   const templateDir = path.join(PKG_ROOT, "templates/frameworks/nextjs");
-  await processTemplates(templateDir, config.projectDir, {
+  const context: TemplateContext = {
     ...config,
     packageManagerCommand: config.packageManager,
-  });
+    versions: PACKAGE_VERSIONS as Record<string, string>,
+  };
+  await processTemplates(templateDir, config.projectDir, context);
 };

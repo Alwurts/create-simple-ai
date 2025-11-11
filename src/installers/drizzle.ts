@@ -1,81 +1,45 @@
 import path from "node:path";
 import fs from "fs-extra";
-import type { Installer } from "../types.js";
+import { PACKAGE_VERSIONS, PKG_ROOT } from "../lib/config.js";
+import { processTemplate } from "../lib/template-processor.js";
+import type { Installer, TemplateContext } from "../types.js";
 
+/**
+ * Drizzle installer - processes Drizzle config and database schema templates
+ * All file content is defined in templates/config/ and templates/lib/db/
+ * Uses database conditionals to generate database-specific code
+ */
 export const drizzleInstaller: Installer = async config => {
-  // Create drizzle.config.ts
-  let configContent = "";
+  const configTemplateDir = path.join(PKG_ROOT, "templates/config");
+  const libTemplateDir = path.join(PKG_ROOT, "templates/lib");
+  const context: TemplateContext = {
+    ...config,
+    packageManagerCommand: config.packageManager,
+    versions: PACKAGE_VERSIONS as Record<string, string>,
+  };
 
-  switch (config.database) {
-    case "postgres":
-      configContent = `import { defineConfig } from 'drizzle-kit';
+  // Process drizzle.config.ts template (database-specific)
+  await processTemplate(
+    path.join(configTemplateDir, "drizzle.config.ts.hbs"),
+    path.join(config.projectDir, "drizzle.config.ts"),
+    context,
+  );
 
-export default defineConfig({
-  schema: './lib/db/schema.ts',
-  out: './drizzle',
-  dialect: 'postgresql',
-  dbCredentials: {
-    url: process.env.DATABASE_URL!,
-  },
-});
-`;
-      break;
-  }
-
-  await fs.writeFile(path.join(config.projectDir, "drizzle.config.ts"), configContent);
-
-  // Create basic lib/db directory structure
+  // Ensure lib/db directory exists
   const dbDir = path.join(config.projectDir, "lib/db");
   await fs.ensureDir(dbDir);
 
-  // Create a basic schema file based on database type
-  let schemaContent = "";
+  // Process lib/db/schema.ts template (database-specific)
+  await processTemplate(
+    path.join(libTemplateDir, "db/schema.ts.hbs"),
+    path.join(dbDir, "schema.ts"),
+    context,
+  );
 
-  switch (config.database) {
-    case "postgres":
-      schemaContent = `import { pgTable, text, serial, timestamp } from 'drizzle-orm/pg-core';
-
-export const users = pgTable('users', {
-  id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').notNull(),
-});
-
-// Auth tables for better-auth
-export const sessions = pgTable('sessions', {
-  id: text('id').primaryKey(),
-  userId: text('user_id').notNull(),
-  expiresAt: timestamp('expires_at').notNull(),
-  ipAddress: text('ip_address'),
-  userAgent: text('user_agent'),
-});
-
-export const accounts = pgTable('accounts', {
-  id: text('id').primaryKey(),
-  userId: text('user_id').notNull(),
-  accountId: text('account_id').notNull(),
-  providerId: text('provider_id').notNull(),
-  accessToken: text('access_token'),
-  refreshToken: text('refresh_token'),
-  accessTokenExpiresAt: timestamp('access_token_expires_at'),
-  refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
-  scope: text('scope'),
-  idToken: text('id_token'),
-  password: text('password'),
-});
-
-export const verifications = pgTable('verifications', {
-  id: text('id').primaryKey(),
-  identifier: text('identifier').notNull(),
-  value: text('value').notNull(),
-  expiresAt: timestamp('expires_at').notNull(),
-});
-
-export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
-`;
-      break;
-  }
-
-  await fs.writeFile(path.join(dbDir, "schema.ts"), schemaContent);
+  // Process lib/db/index.ts template (database-specific)
+  await processTemplate(
+    path.join(libTemplateDir, "db/index.ts.hbs"),
+    path.join(dbDir, "index.ts"),
+    context,
+  );
 };

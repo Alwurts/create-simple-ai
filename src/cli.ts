@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { Command } from "commander";
 import { createCommand } from "./commands/create.js";
 import { CLI_DESCRIPTION, CLI_NAME, CLI_VERSION } from "./lib/config.js";
@@ -13,8 +11,7 @@ program
   .command("create [project-name]")
   .description("Create a new application")
   .option("-y, --yes", "Skip prompts and use default options", false)
-  .option("-d, --database <type>", "Database type (sqlite|postgres|mysql)", "sqlite")
-  .option("-a, --auth <provider>", "Authentication provider (better-auth|none)", "better-auth")
+  .option("-d, --database <type>", "Database type (postgres|mysql|sqlite)", "postgres")
   .option("--no-git", "Skip Git initialization", false)
   .option("--no-install", "Skip dependency installation", false)
   .option("-p, --package-manager <manager>", "Package manager (npm|pnpm|bun)", "npm")

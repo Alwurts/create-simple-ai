@@ -1,43 +1,48 @@
 import path from "node:path";
 import fs from "fs-extra";
-import type { Installer } from "../types.js";
+import { PACKAGE_VERSIONS, PKG_ROOT } from "../lib/config.js";
+import { processTemplate } from "../lib/template-processor.js";
+import type { Installer, TemplateContext } from "../types.js";
 
+/**
+ * Better Auth installer - processes auth config and API route templates
+ * All file content is defined in templates/lib/auth/ and templates/app/api/
+ */
 export const betterAuthInstaller: Installer = async config => {
-  // Create basic auth configuration
+  const libTemplateDir = path.join(PKG_ROOT, "templates/lib");
+  const appTemplateDir = path.join(PKG_ROOT, "templates/app");
+  const context: TemplateContext = {
+    ...config,
+    packageManagerCommand: config.packageManager,
+    versions: PACKAGE_VERSIONS as Record<string, string>,
+  };
+
+  // Ensure lib/auth directory exists
   const authDir = path.join(config.projectDir, "lib/auth");
   await fs.ensureDir(authDir);
 
-  const authConfig = `import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/lib/db";
-import { users, sessions, accounts, verifications } from "@/lib/db/schema";
+  // Process lib/auth/config.ts template
+  await processTemplate(
+    path.join(libTemplateDir, "auth/config.ts.hbs"),
+    path.join(authDir, "config.ts"),
+    context,
+  );
 
-export const auth = betterAuth({
-  database: drizzleAdapter(db, {
-    provider: "${config.database}",
-    schema: {
-      user: users,
-      session: sessions,
-      account: accounts,
-      verification: verifications,
-    },
-  }),
-  emailAndPassword: {
-    enabled: true,
-  },
-});
-`;
+  // Process lib/auth/client.ts template
+  await processTemplate(
+    path.join(libTemplateDir, "auth/client.ts.hbs"),
+    path.join(authDir, "client.ts"),
+    context,
+  );
 
-  await fs.writeFile(path.join(authDir, "config.ts"), authConfig);
-
-  // Create API route for auth
+  // Ensure app/api/auth/[...all] directory exists
   const apiDir = path.join(config.projectDir, "app/api/auth/[...all]");
   await fs.ensureDir(apiDir);
 
-  const routeContent = `import { auth } from "@/lib/auth/config";
-
-export const { GET, POST } = auth.handlers;
-`;
-
-  await fs.writeFile(path.join(apiDir, "route.ts"), routeContent);
+  // Process app/api/auth/[...all]/route.ts template
+  await processTemplate(
+    path.join(appTemplateDir, "api/auth/[...all]/route.ts.hbs"),
+    path.join(apiDir, "route.ts"),
+    context,
+  );
 };

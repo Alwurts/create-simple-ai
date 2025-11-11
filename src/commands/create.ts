@@ -4,9 +4,7 @@ import { setupProject } from "../core/project-setup.js";
 import { logger } from "../lib/logger.js";
 import { detectPackageManager } from "../lib/package-manager.js";
 import { validateProjectDirectory } from "../lib/validation.js";
-import { getAuthChoice } from "../prompts/auth.js";
 import { getDatabaseChoice } from "../prompts/database.js";
-import { getExampleChoices } from "../prompts/examples.js";
 import { getProjectName } from "../prompts/project-name.js";
 import type { CLIOptions, ProjectConfig } from "../types.js";
 import { ProjectConfigSchema } from "../types.js";
@@ -46,10 +44,6 @@ async function gatherConfiguration(
 
   const database = options.database || (options.yes ? "postgres" : await getDatabaseChoice());
 
-  const auth = options.auth || (options.yes ? "better-auth" : await getAuthChoice());
-
-  const examples = options.examples || (options.yes ? [] : await getExampleChoices());
-
   const git = options.git ?? true;
 
   const install = options.install ?? true;
@@ -59,8 +53,6 @@ async function gatherConfiguration(
     projectDir,
     framework,
     database,
-    auth,
-    examples,
     git,
     install,
     packageManager,

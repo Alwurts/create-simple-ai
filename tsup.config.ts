@@ -9,4 +9,10 @@ export default defineConfig({
     js: "#!/usr/bin/env node",
   },
   shims: false,
+  // Ensure the file is executable
+  outExtension() {
+    return {
+      js: ".js",
+    };
+  },
 });

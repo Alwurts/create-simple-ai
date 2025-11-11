@@ -1,38 +1,24 @@
 import path from "node:path";
-import fs from "fs-extra";
-import type { Installer } from "../types.js";
+import { PACKAGE_VERSIONS, PKG_ROOT } from "../lib/config.js";
+import { processTemplate } from "../lib/template-processor.js";
+import type { Installer, TemplateContext } from "../types.js";
 
+/**
+ * Biome installer - processes Biome config template
+ * All file content is defined in templates/config/
+ */
 export const biomeInstaller: Installer = async config => {
-  // Create biome.json configuration
-  const biomeConfig = {
-    $schema: "https://biomejs.dev/schemas/2.3.4/schema.json",
-    formatter: {
-      enabled: true,
-      indentStyle: "space",
-      indentWidth: 2,
-      lineWidth: 100,
-    },
-    linter: {
-      enabled: true,
-      rules: {
-        recommended: true,
-        correctness: {
-          noUnusedVariables: "warn",
-          noUnusedImports: "warn",
-        },
-      },
-    },
-    javascript: {
-      formatter: {
-        quoteStyle: "single",
-        semicolons: "asNeeded",
-        trailingCommas: "es5",
-      },
-    },
+  const configTemplateDir = path.join(PKG_ROOT, "templates/config");
+  const context: TemplateContext = {
+    ...config,
+    packageManagerCommand: config.packageManager,
+    versions: PACKAGE_VERSIONS as Record<string, string>,
   };
 
-  await fs.writeFile(
+  // Process biome.json template
+  await processTemplate(
+    path.join(configTemplateDir, "biome.json.hbs"),
     path.join(config.projectDir, "biome.json"),
-    JSON.stringify(biomeConfig, null, 2),
+    context,
   );
 };

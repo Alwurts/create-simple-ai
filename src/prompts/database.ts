@@ -6,6 +6,8 @@ export async function getDatabaseChoice(): Promise<Database> {
     message: "What database would you like to use?",
     options: [
       { value: "postgres", label: "PostgreSQL" },
+      { value: "mysql", label: "MySQL" },
+      { value: "sqlite", label: "SQLite" },
     ],
     initialValue: "postgres",
   });
