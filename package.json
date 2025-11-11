@@ -1,6 +1,6 @@
 {
   "name": "create-simple-ai",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Create simple AI-powered full-stack applications",
   "type": "module",
   "bin": {
@@ -19,7 +19,17 @@
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
     "lint": "biome check --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "changeset": "changeset",
+    "changeset:status": "changeset status",
+    "changeset:version": "changeset version",
+    "pre-release": "tsx scripts/pre-release-check.ts",
+    "release": "tsx scripts/release.ts",
+    "release:dry-run": "tsx scripts/release.ts --dry-run",
+    "canary": "tsx scripts/canary-release.ts",
+    "canary:dry-run": "tsx scripts/canary-release.ts --dry-run",
+    "version": "changeset version",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
@@ -31,10 +41,12 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.4",
+    "@changesets/cli": "^2.29.7",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^24.10.0",
     "@vitest/ui": "^4.0.8",
     "tsup": "^8.5.0",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "vitest": "^4.0.8",
     "zod": "^4.1.12"

@@ -98,6 +98,9 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
+# Test directories
+.smoke/
+
 # Lock files (uncomment if needed)
 # package-lock.json
 # yarn.lock
