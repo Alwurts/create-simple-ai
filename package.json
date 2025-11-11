@@ -1,42 +1,42 @@
 {
-  "name": "create-simple-ai",
-  "version": "0.1.0",
-  "description": "Create simple AI-powered full-stack applications",
-  "type": "module",
-  "bin": {
-    "create-simple-ai": "./dist/cli.js"
-  },
-  "files": [
-    "dist",
-    "templates"
-  ],
-  "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "start": "node dist/cli.js",
-    "test": "vitest",
-    "test:run": "vitest run",
-    "lint": "biome check --write .",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@clack/prompts": "^0.7.0",
-    "commander": "^12.0.0",
-    "execa": "^9.0.0",
-    "fs-extra": "^11.0.0",
-    "handlebars": "^4.7.0",
-    "picocolors": "^1.0.0"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^11.0.0",
-    "@types/node": "^20.0.0",
-    "biome": "^1.0.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0",
-    "vitest": "^1.0.0",
-    "zod": "^3.0.0"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+	"name": "create-simple-ai",
+	"version": "0.1.0",
+	"description": "Create simple AI-powered full-stack applications",
+	"type": "module",
+	"bin": {
+		"create-simple-ai": "./dist/cli.js"
+	},
+	"files": [
+		"dist",
+		"templates"
+	],
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"start": "node dist/cli.js",
+		"test": "vitest",
+		"test:run": "vitest run",
+		"lint": "biome check --write .",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@clack/prompts": "^0.11.0",
+		"commander": "^14.0.2",
+		"execa": "^9.6.0",
+		"fs-extra": "^11.3.2",
+		"handlebars": "^4.7.8",
+		"picocolors": "^1.1.1"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.4",
+		"@types/fs-extra": "^11.0.4",
+		"@types/node": "^24.10.0",
+		"tsup": "^8.5.0",
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.8",
+		"zod": "^4.1.12"
+	},
+	"engines": {
+		"node": ">=18.0.0"
+	}
 }
