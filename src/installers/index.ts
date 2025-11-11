@@ -10,11 +10,11 @@ import { tailwindInstaller } from "./tailwind.js";
 
 // Registry of all available installers
 export const installers: Record<string, Installer> = {
-	nextjs: nextjsInstaller,
-	shadcn: shadcnInstaller,
-	drizzle: drizzleInstaller,
-	"better-auth": betterAuthInstaller,
-	hono: honoInstaller,
-	biome: biomeInstaller,
-	tailwind: tailwindInstaller,
+  nextjs: nextjsInstaller,
+  shadcn: shadcnInstaller,
+  drizzle: drizzleInstaller,
+  "better-auth": betterAuthInstaller,
+  hono: honoInstaller,
+  biome: biomeInstaller,
+  tailwind: tailwindInstaller,
 };
