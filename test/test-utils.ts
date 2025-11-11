@@ -2,7 +2,7 @@ import { rm } from "node:fs/promises";
 import { join } from "node:path";
 import { pathExists, readFile, readJSON } from "fs-extra";
 import { expect } from "vitest";
-import { createCommand } from "../src/commands/create.js";
+import { setupProject } from "../src/core/project-setup.js";
 import type { CLIOptions } from "../src/types.js";
 
 export interface TestResult {
@@ -38,26 +38,23 @@ export async function runTest(config: TestConfig): Promise<TestResult> {
   const smokeDir = join(process.cwd(), ".smoke");
   const projectDir = join(smokeDir, config.projectName);
 
-  // Store original cwd
-  const originalCwd = process.cwd();
-
   try {
     // Ensure smoke directory exists
     const { ensureDir } = await import("fs-extra");
     await ensureDir(smokeDir);
 
-    // Change to smoke directory so project is created there
-    process.chdir(smokeDir);
-
-    const options: CLIOptions = {
-      yes: true, // Always use yes to skip prompts
-      install: config.install ?? false, // Default to false for faster tests
-      git: config.git ?? false, // Default to false for faster tests
-      packageManager: config.packageManager,
-      database: config.database,
+    // Create a modified config that uses the smoke directory as the base
+    const testConfig = {
+      projectName: config.projectName,
+      projectDir,
+      framework: "nextjs" as const,
+      database: config.database || "postgres",
+      git: config.git ?? false,
+      install: config.install ?? false,
+      packageManager: config.packageManager || "npm",
     };
 
-    await createCommand(config.projectName, options);
+    await setupProject(testConfig);
 
     // Verify project was created
     const projectExists = await pathExists(projectDir);
@@ -73,9 +70,6 @@ export async function runTest(config: TestConfig): Promise<TestResult> {
       error: error instanceof Error ? error.message : String(error),
       config,
     };
-  } finally {
-    // Restore original cwd
-    process.chdir(originalCwd);
   }
 }
 
