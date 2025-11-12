@@ -1,20 +1,24 @@
-import { afterEach, describe, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import {
   cleanupSmokeDirectory,
   expectFileExists,
+  expectGitInitialized,
+  expectGitNotInitialized,
   expectSuccess,
   expectSuccessWithProjectDir,
   runTest,
   validatePackageJson,
-  validateProjectStructure,
 } from "./test-utils.js";
-import { readJSON } from "fs-extra";
+import { readJSON, pathExists } from "fs-extra";
 import path from "node:path";
 
 describe("Basic Project Creation", () => {
   afterEach(async () => {
     await cleanupSmokeDirectory("copied-app");
     await cleanupSmokeDirectory("my-explicit-app");
+    await cleanupSmokeDirectory("git-app");
+    await cleanupSmokeDirectory("no-git-app");
+    await cleanupSmokeDirectory("no-install-app");
   });
 
   it("should copy the vercel template and rename the project in package.json", async () => {
@@ -29,7 +33,7 @@ describe("Basic Project Creation", () => {
     const projectDir = expectSuccessWithProjectDir(result);
 
     // Check if a known file from the template exists
-    await expectFileExists(projectDir, "next.config.js");
+    await expectFileExists(projectDir, "next.config.ts");
 
     // Check if package.json name was updated
     const packageJson = await readJSON(path.join(projectDir, "package.json"));
@@ -47,5 +51,49 @@ describe("Basic Project Creation", () => {
     expectSuccess(result);
     const projectDir = expectSuccessWithProjectDir(result);
     await validatePackageJson(projectDir, "my-explicit-app");
+  });
+
+  it("should initialize git repository when git option is enabled", async () => {
+    const result = await runTest({
+      projectName: "git-app",
+      yes: true,
+      install: false,
+      git: true,
+    });
+
+    expectSuccess(result);
+    const projectDir = expectSuccessWithProjectDir(result);
+    await expectGitInitialized(projectDir);
+  });
+
+  it("should NOT initialize git repository when git option is disabled", async () => {
+    const result = await runTest({
+      projectName: "no-git-app",
+      yes: true,
+      install: false,
+      git: false,
+    });
+
+    expectSuccess(result);
+    const projectDir = expectSuccessWithProjectDir(result);
+    await expectGitNotInitialized(projectDir);
+  });
+
+  it("should NOT install dependencies when install option is disabled", async () => {
+    const result = await runTest({
+      projectName: "no-install-app",
+      yes: true,
+      install: false,
+      git: false,
+    });
+
+    expectSuccess(result);
+    const projectDir = expectSuccessWithProjectDir(result);
+
+    // Check that package-lock.json does NOT exist (it would be created by npm install)
+    const packageLockExists = await pathExists(path.join(projectDir, "package-lock.json"));
+    expect(packageLockExists).toBe(false);
+
+    // node_modules exists because it's copied from the template, but no package-lock.json means npm install wasn't run
   });
 });

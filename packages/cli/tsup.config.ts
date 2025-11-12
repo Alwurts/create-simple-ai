@@ -9,6 +9,8 @@ export default defineConfig({
     js: "#!/usr/bin/env node",
   },
   shims: false,
+  // Copy the templates directory into the dist folder
+  publicDir: "../../packages/templates",
   // Ensure the file is executable
   outExtension() {
     return {

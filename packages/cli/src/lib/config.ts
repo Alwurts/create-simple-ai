@@ -6,15 +6,17 @@ const __filename = fileURLToPath(import.meta.url);
 const currentDir = path.dirname(__filename);
 
 // tsup bundles everything into dist/cli.js, so we need to detect that
-// For development (packages/cli/src/lib/), go up three levels to monorepo root
+// For development (packages/cli/src/lib/), go up four levels to monorepo root
 // For production (packages/cli/dist/cli.js bundled), go up two levels to monorepo root
 const isBundled = __filename.includes("/dist/cli.js") || currentDir.includes("/dist/cli.js");
 // Calculate PKG_ROOT based on where we're running from
 export const PKG_ROOT = isBundled
   ? path.resolve(currentDir, "../..") // When bundled in packages/cli/dist/cli.js, go up two levels
-  : path.resolve(currentDir, "../../.."); // When in packages/cli/src/lib/, go up three levels
+  : path.resolve(currentDir, "../../../.."); // When in packages/cli/src/lib/, go up four levels
 
-export const TEMPLATES_DIR = path.join(PKG_ROOT, "packages/templates");
+export const TEMPLATES_DIR = isBundled
+  ? path.join(PKG_ROOT, "templates") // Looks for dist/templates
+  : path.resolve(PKG_ROOT, "packages/templates"); // Looks for root packages/templates in dev
 
 export const DEFAULT_CLI_CONFIG_BASE: Omit<ProjectConfig, "projectDir"> = {
   projectName: "my-app",

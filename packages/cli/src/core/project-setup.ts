@@ -14,7 +14,7 @@ export async function setupProject(config: ProjectConfig): Promise<void> {
     await fs.ensureDir(config.projectDir);
 
     // 2. Define source and destination
-    const templateName = "template-vercel"; // Hardcoded for now
+    const templateName = "project-starter-nextjs-vercel"; // Hardcoded for now
     const templateDir = path.join(TEMPLATES_DIR, templateName);
 
     // 3. Copy the template project
