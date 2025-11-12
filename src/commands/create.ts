@@ -3,7 +3,7 @@ import pc from "picocolors";
 import { setupProject } from "../core/project-setup.js";
 import { logger } from "../lib/logger.js";
 import { detectPackageManager } from "../lib/package-manager.js";
-import { validateProjectDirectory } from "../lib/validation.js";
+import { validateProjectDirectory, isInteractive } from "../lib/validation.js";
 import { getDatabaseChoice } from "../prompts/database.js";
 import { getProjectName } from "../prompts/project-name.js";
 import type { CLIOptions, ProjectConfig } from "../types.js";
@@ -42,7 +42,18 @@ async function gatherConfiguration(
   const framework = "nextjs";
   const packageManager = options.packageManager || (await detectPackageManager());
 
-  const database = options.database || (options.yes ? "postgres" : await getDatabaseChoice());
+  let database: ProjectConfig["database"];
+  if (options.database) {
+    database = options.database;
+  } else if (options.yes) {
+    database = "postgres";
+  } else if (isInteractive()) {
+    database = await getDatabaseChoice();
+  } else {
+    throw new Error(
+      "Database must be specified with --database option when not in interactive mode. Use --yes to use default settings.",
+    );
+  }
 
   const git = options.git ?? true;
 

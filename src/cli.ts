@@ -11,7 +11,7 @@ program
   .version(CLI_VERSION)
   .argument("[project-name]", "Name of the project to create")
   .option("-y, --yes", "Skip prompts and use default options", false)
-  .option("-d, --database <type>", "Database type (postgres|mysql|sqlite)", "postgres")
+  .option("-d, --database <type>", "Database type (postgres|mysql|sqlite)")
   .option("--no-git", "Skip Git initialization", false)
   .option("--no-install", "Skip dependency installation", false)
   .option("-p, --package-manager <manager>", "Package manager (npm|pnpm|bun)", "npm")
