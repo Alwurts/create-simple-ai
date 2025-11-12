@@ -14,6 +14,7 @@ program
   .option("-d, --database <type>", "Database type (postgres|mysql|sqlite)")
   .option("-g, --git", "Initialize a git repository")
   .option("--no-git", "Skip Git initialization", false)
+  .option("-i, --install", "Install dependencies")
   .option("--no-install", "Skip dependency installation", false)
   .action(async (projectName, options) => {
     try {

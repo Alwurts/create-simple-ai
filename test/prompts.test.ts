@@ -1,5 +1,6 @@
 import { describe, it, vi, expect } from "vitest";
 import { getGitChoice } from "../src/prompts/git.js";
+import { getInstallChoice } from "../src/prompts/install.js";
 import * as p from "@clack/prompts";
 import { isInteractive } from "../src/lib/validation.js";
 
@@ -50,5 +51,43 @@ describe("Git Prompt", () => {
     mockIsCancel.mockReturnValue(true);
 
     await expect(getGitChoice()).rejects.toThrow("Operation cancelled");
+  });
+});
+
+describe("Install Prompt", () => {
+  it("should return true when user confirms dependency installation", async () => {
+    const mockConfirm = vi.mocked(p.confirm);
+    const mockIsCancel = vi.mocked(p.isCancel);
+
+    mockConfirm.mockResolvedValue(true);
+    mockIsCancel.mockReturnValue(false);
+
+    const result = await getInstallChoice();
+    expect(result).toBe(true);
+    expect(mockConfirm).toHaveBeenCalledWith({
+      message: "Install dependencies?",
+      initialValue: true,
+    });
+  });
+
+  it("should return false when user declines dependency installation", async () => {
+    const mockConfirm = vi.mocked(p.confirm);
+    const mockIsCancel = vi.mocked(p.isCancel);
+
+    mockConfirm.mockResolvedValue(false);
+    mockIsCancel.mockReturnValue(false);
+
+    const result = await getInstallChoice();
+    expect(result).toBe(false);
+  });
+
+  it("should throw error when user cancels install prompt", async () => {
+    const mockConfirm = vi.mocked(p.confirm);
+    const mockIsCancel = vi.mocked(p.isCancel);
+
+    mockConfirm.mockResolvedValue(undefined); // Cancelled
+    mockIsCancel.mockReturnValue(true);
+
+    await expect(getInstallChoice()).rejects.toThrow("Operation cancelled");
   });
 });

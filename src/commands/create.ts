@@ -6,6 +6,7 @@ import { getPackageManagerCommand } from "../lib/package-manager.js";
 import { isInteractive, validateProjectDirectory } from "../lib/validation.js";
 import { getDatabaseChoice } from "../prompts/database.js";
 import { getGitChoice } from "../prompts/git.js";
+import { getInstallChoice } from "../prompts/install.js";
 import { getProjectName } from "../prompts/project-name.js";
 import type { CLIOptions, ProjectConfig } from "../types.js";
 import { ProjectConfigSchema } from "../types.js";
@@ -71,7 +72,20 @@ async function gatherConfiguration(
     );
   }
 
-  const install = options.install ?? true;
+  let install: boolean;
+  if (options.install === true) {
+    install = true;
+  } else if (options.install === false) {
+    install = false;
+  } else if (options.yes) {
+    install = true;
+  } else if (isInteractive()) {
+    install = await getInstallChoice();
+  } else {
+    throw new Error(
+      "Dependency installation must be specified with --install or --no-install when not in interactive mode. Use --yes to use default settings.",
+    );
+  }
 
   const config: ProjectConfig = {
     projectName: finalProjectName,

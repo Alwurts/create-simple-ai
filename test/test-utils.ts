@@ -55,6 +55,13 @@ export async function runTest(config: TestConfig): Promise<TestResult> {
       return false; // Default for tests when neither git option nor yes is specified
     })();
 
+    const install = (() => {
+      if (config.install === true) return true;
+      if (config.install === false) return false;
+      if (config.yes) return true;
+      return false; // Default for tests when neither install option nor yes is specified
+    })();
+
     const testConfig = {
       projectName: config.projectName,
       projectDir,

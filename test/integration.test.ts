@@ -9,6 +9,9 @@ describe("Integration Tests", () => {
     await cleanupSmokeDirectory("git-yes-app");
     await cleanupSmokeDirectory("git-explicit-app");
     await cleanupSmokeDirectory("no-git-explicit-app");
+    await cleanupSmokeDirectory("install-yes-app");
+    await cleanupSmokeDirectory("install-explicit-app");
+    await cleanupSmokeDirectory("no-install-explicit-app");
   });
 
   it("should create a basic project", async () => {
@@ -77,5 +80,28 @@ describe("Integration Tests", () => {
 
     const projectDir = expectSuccessWithProjectDir(result);
     await expectGitNotInitialized(projectDir);
+  });
+
+  it("should install dependencies by default with --yes", async () => {
+    const result = await runTest({
+      projectName: "install-yes-app",
+      yes: true,
+      git: false,
+    });
+
+    const projectDir = expectSuccessWithProjectDir(result);
+    // Dependencies should be installed (though we can't easily verify node_modules creation in tests)
+    await expectGitNotInitialized(projectDir); // git should be false
+  });
+
+
+  it("should skip dependency installation when explicitly disabled", async () => {
+    const result = await runTest({
+      projectName: "no-install-explicit-app",
+      install: false,
+      git: false,
+    });
+
+    expectSuccess(result);
   });
 });
