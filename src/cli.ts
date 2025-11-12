@@ -5,11 +5,11 @@ import { handleError } from "./lib/error-handler.js";
 
 const program = new Command();
 
-program.name(CLI_NAME).description(CLI_DESCRIPTION).version(CLI_VERSION);
-
 program
-  .command("create [project-name]")
-  .description("Create a new application")
+  .name(CLI_NAME)
+  .description(CLI_DESCRIPTION)
+  .version(CLI_VERSION)
+  .argument("[project-name]", "Name of the project to create")
   .option("-y, --yes", "Skip prompts and use default options", false)
   .option("-d, --database <type>", "Database type (postgres|mysql|sqlite)", "postgres")
   .option("--no-git", "Skip Git initialization", false)

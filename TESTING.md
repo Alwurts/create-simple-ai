@@ -50,18 +50,18 @@ npm run build
 chmod +x dist/cli.js
 
 # Run with defaults
-./dist/cli.js create test-app --yes
+./dist/cli.js test-app --yes
 
 # Run with specific database
-./dist/cli.js create test-app-postgres --database postgres --yes
-./dist/cli.js create test-app-mysql --database mysql --yes
-./dist/cli.js create test-app-sqlite --database sqlite --yes
+./dist/cli.js test-app-postgres --database postgres --yes
+./dist/cli.js test-app-mysql --database mysql --yes
+./dist/cli.js test-app-sqlite --database sqlite --yes
 
 # Run without installation (faster for testing)
-./dist/cli.js create test-app --yes --no-install
+./dist/cli.js test-app --yes --no-install
 
 # Run without git initialization
-./dist/cli.js create test-app --yes --no-git
+./dist/cli.js test-app --yes --no-git
 ```
 
 ### Option 2: Using npm link (For Global Testing)
@@ -83,7 +83,7 @@ npm unlink -g create-simple-ai
 
 ```bash
 # From any directory
-npx /absolute/path/to/create-simple-ai/dist/cli.js create test-app --yes
+npx /absolute/path/to/create-simple-ai/dist/cli.js test-app --yes
 ```
 
 ### Option 4: Using Node Directly (Not Recommended)
@@ -92,10 +92,10 @@ If you need to use `node` directly, you'll need to remove the shebang first or u
 
 ```bash
 # This won't work due to shebang in ESM
-node dist/cli.js create test-app --yes  # ❌ Fails
+node dist/cli.js test-app --yes  # ❌ Fails
 
 # Use direct execution instead
-./dist/cli.js create test-app --yes  # ✅ Works
+./dist/cli.js test-app --yes  # ✅ Works
 ```
 
 ## What to Test Manually
