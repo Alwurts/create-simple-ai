@@ -26,7 +26,7 @@ npx create-simple-ai my-app --database postgres --yes
 
 ## Options
 
-- `--database <type>` - Database type: `postgres`, `mysql`, or `sqlite` (default: `postgres`)
+- `--database <type>` - Database type: `postgres` or `sqlite` (default: `postgres`)
 - `--yes` - Skip prompts and use defaults
 - `--no-git` - Skip Git initialization
 - `--no-install` - Skip dependency installation

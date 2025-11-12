@@ -11,7 +11,7 @@ program
   .version(CLI_VERSION)
   .argument("[project-name]", "Name of the project to create")
   .option("-y, --yes", "Skip prompts and use default options", false)
-  .option("-d, --database <type>", "Database type (postgres|mysql|sqlite)")
+  .option("-d, --database <type>", "Database type (postgres|sqlite)")
   .option("-g, --git", "Initialize a git repository")
   .option("--no-git", "Skip Git initialization", false)
   .option("-i, --install", "Install dependencies")

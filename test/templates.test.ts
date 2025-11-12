@@ -1,11 +1,11 @@
 import { afterEach, describe, it } from "vitest";
 import {
   cleanupSmokeDirectory,
-  expectFileContains,
   expectSuccess,
   expectSuccessWithProjectDir,
   runTest,
   validateAuthSetup,
+  validatePackageJsonDependencies,
 } from "./test-utils.js";
 
 describe("Template Generation", () => {
@@ -13,7 +13,7 @@ describe("Template Generation", () => {
     await cleanupSmokeDirectory("template-test-app");
   });
 
-  it("should generate all required templates", async () => {
+  it("should generate templates with correct structure", async () => {
     const result = await runTest({
       projectName: "template-test-app",
       yes: true,
@@ -24,22 +24,10 @@ describe("Template Generation", () => {
     expectSuccess(result);
     const projectDir = expectSuccessWithProjectDir(result);
 
-    // Validate auth templates
+    // Validate auth setup (files exist)
     await validateAuthSetup(projectDir);
 
-    // Validate package.json uses dynamic versions
-    await expectFileContains(projectDir, "package.json", '"next":');
-    await expectFileContains(projectDir, "package.json", '"react":');
-    await expectFileContains(projectDir, "package.json", '"better-auth":');
-
-    // TODO: Add config file validations when config files are implemented
-    // // Validate tailwind config
-    // await expectFileContains(projectDir, "tailwind.config.js", "tailwindcss");
-    //
-    // // Validate biome config
-    // await expectFileContains(projectDir, "biome.json", "biomejs.dev");
-    //
-    // // Validate components.json
-    // await expectFileContains(projectDir, "components.json", "shadcn.com");
+    // Validate package.json has expected dependency categories
+    await validatePackageJsonDependencies(projectDir, "postgres");
   });
 });

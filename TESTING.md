@@ -54,7 +54,6 @@ chmod +x dist/cli.js
 
 # Run with specific database
 ./dist/cli.js test-app-postgres --database postgres --yes
-./dist/cli.js test-app-mysql --database mysql --yes
 ./dist/cli.js test-app-sqlite --database sqlite --yes
 
 # Run without installation (faster for testing)
@@ -102,7 +101,7 @@ node dist/cli.js test-app --yes  # ❌ Fails
 
 1. **Basic Functionality**
    - Create a project with default options
-   - Create a project with each database type (postgres, mysql, sqlite)
+   - Create a project with each database type (postgres, sqlite)
    - Verify all files are generated correctly
 
 2. **Configuration Options**

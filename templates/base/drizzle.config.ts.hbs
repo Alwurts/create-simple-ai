@@ -15,21 +15,6 @@ export default defineConfig({
 		url: postgresUrl,
 	},
 });
-{{/if}}{{#if (eq database "mysql")}}
-const mysqlUrl = process.env.MYSQL_URL;
-
-if (!mysqlUrl) {
-	throw new Error("MYSQL_URL is not set");
-}
-
-export default defineConfig({
-	schema: "./src/db/schema/*",
-	out: "./drizzle",
-	dialect: "mysql",
-	dbCredentials: {
-		url: mysqlUrl,
-	},
-});
 {{/if}}{{#if (eq database "sqlite")}}
 export default defineConfig({
 	schema: "./src/db/schema/*",

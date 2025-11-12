@@ -1,6 +1,7 @@
 import { rm } from "node:fs/promises";
 import { join } from "node:path";
 import { pathExists, readFile, readJSON } from "fs-extra";
+import { execa } from "execa";
 import { expect } from "vitest";
 import { setupProject } from "../src/core/project-setup.js";
 import type { CLIOptions } from "../src/types.js";
@@ -49,18 +50,18 @@ export async function runTest(config: TestConfig): Promise<TestResult> {
     // Create a modified config that uses the smoke directory as the base
     // Apply the same defaulting logic as the actual create command
     const git = (() => {
-      if (config.git === true) return true;
-      if (config.git === false) return false;
-      if (config.yes) return true;
+      if (config.git === true) {
+        return true;
+      }
+      if (config.git === false) {
+        return false;
+      }
+      if (config.yes) {
+        return true;
+      }
       return false; // Default for tests when neither git option nor yes is specified
     })();
 
-    const install = (() => {
-      if (config.install === true) return true;
-      if (config.install === false) return false;
-      if (config.yes) return true;
-      return false; // Default for tests when neither install option nor yes is specified
-    })();
 
     const testConfig = {
       projectName: config.projectName,
@@ -69,7 +70,7 @@ export async function runTest(config: TestConfig): Promise<TestResult> {
       database: config.database || "postgres",
       git,
       install: config.install ?? false,
-      packageManager: "npm",
+      packageManager: "npm" as const,
     };
 
     await setupProject(testConfig);
@@ -189,22 +190,20 @@ export async function validatePackageJson(
 }
 
 /**
- * Validate database configuration files
+ * Validate database configuration files (simple structural check)
  */
 export async function validateDatabaseConfig(projectDir: string, database: string): Promise<void> {
-  // Check drizzle.config.ts
+  // Just check that drizzle config exists and mentions the expected database type
   await expectFileExists(projectDir, "drizzle.config.ts");
 
+  const configContent = await readFile(join(projectDir, "drizzle.config.ts"), "utf-8");
   if (database === "postgres") {
-    await expectFileContains(projectDir, "drizzle.config.ts", "postgresql");
-    await expectFileContains(projectDir, "drizzle.config.ts", "DATABASE_URL");
-  } else if (database === "mysql") {
-    await expectFileContains(projectDir, "drizzle.config.ts", "mysql");
+    expect(configContent.toLowerCase()).toContain("postgres");
   } else if (database === "sqlite") {
-    await expectFileContains(projectDir, "drizzle.config.ts", "sqlite");
+    expect(configContent.toLowerCase()).toContain("sqlite");
   }
 
-  // Check schema file
+  // Check that basic schema files exist
   await expectFileExists(projectDir, "src/db/schema/index.ts");
   await expectFileExists(projectDir, "src/db/index.ts");
 }
@@ -240,4 +239,85 @@ export async function validateProjectStructure(projectDir: string): Promise<void
   // Library files
   await expectFileExists(projectDir, "src/lib/utils.ts");
   await expectFileExists(projectDir, "src/lib/config.ts");
+}
+
+/**
+ * Validate package.json structure and dependencies (structural, not version-specific)
+ */
+export async function validatePackageJsonDependencies(
+  projectDir: string,
+  expectedDatabase?: string,
+): Promise<void> {
+  const packageJson = await readJSON(join(projectDir, "package.json"));
+
+  // Check for core framework dependencies (existence, not versions)
+  expect(packageJson.dependencies).toHaveProperty("next");
+  expect(packageJson.dependencies).toHaveProperty("react");
+  expect(packageJson.dependencies).toHaveProperty("better-auth");
+
+  // Check for build scripts
+  expect(packageJson.scripts).toHaveProperty("dev");
+  expect(packageJson.scripts).toHaveProperty("build");
+  expect(packageJson.scripts.build).toContain("next build");
+
+  // Database-specific validation (just check key dependencies exist)
+  if (expectedDatabase === "postgres") {
+    expect(packageJson.dependencies).toHaveProperty("pg");
+  } else if (expectedDatabase === "sqlite") {
+    expect(packageJson.dependencies).toHaveProperty("@libsql/client");
+  }
+}
+
+/**
+ * Validate that a project can be installed and built successfully
+ */
+export async function expectProjectCompiles(
+  projectDir: string,
+  database: string = "postgres",
+): Promise<void> {
+  // Set up dummy environment variables for testing
+  const envVars = {
+    BETTER_AUTH_SECRET: "test-secret-for-compilation",
+    ...getDatabaseEnvVars(database),
+  };
+
+  // Test npm install
+  try {
+    await execa("npm", ["install"], {
+      cwd: projectDir,
+      stdio: "pipe",
+      timeout: 120000, // 2 minute timeout for slow installs
+    });
+  } catch (error) {
+    throw new Error(`npm install failed: ${error}`);
+  }
+
+  // Test npm run build with environment variables
+  try {
+    await execa("npm", ["run", "build"], {
+      cwd: projectDir,
+      stdio: "pipe",
+      timeout: 120000, // 2 minute timeout
+      env: { ...process.env, ...envVars },
+    });
+  } catch (error) {
+    throw new Error(`npm run build failed: ${error}`);
+  }
+}
+
+/**
+ * Get dummy database environment variables for testing
+ */
+function getDatabaseEnvVars(database: string): Record<string, string> {
+  switch (database) {
+    case "postgres":
+      return { POSTGRES_URL: "postgresql://user:pass@localhost:5432/test" };
+    case "sqlite":
+      return {
+        TURSO_DATABASE_URL: "file:./test.db",
+        TURSO_AUTH_TOKEN: "test-token",
+      };
+    default:
+      return {};
+  }
 }

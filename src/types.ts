@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const FRAMEWORKS = ["nextjs"] as const;
-export const DATABASES = ["postgres", "mysql", "sqlite"] as const;
+export const DATABASES = ["postgres", "sqlite"] as const;
 export const PACKAGE_MANAGERS = ["npm", "pnpm", "bun"] as const;
 
 export const FrameworkSchema = z.enum(FRAMEWORKS);

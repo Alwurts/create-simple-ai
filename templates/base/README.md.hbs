@@ -17,8 +17,6 @@ A modern, feature-rich full-stack Todo application with authentication, built wi
 
 {{#if (eq database "postgres")}}
 - PostgreSQL database (local or remote)
-{{else if (eq database "mysql")}}
-- MySQL database (local or remote)
 {{else if (eq database "sqlite")}}
 - Turso account (for SQLite with edge replication)
 {{/if}}
@@ -36,9 +34,6 @@ Edit `.env.local` with your database connection details:
 {{#if (eq database "postgres")}}
 ```env
 POSTGRES_URL="postgresql://username:password@localhost:5432/{{projectName}}_db"
-{{else if (eq database "mysql")}}
-```env
-MYSQL_URL="mysql://username:password@localhost:3306/{{projectName}}_db"
 {{else if (eq database "sqlite")}}
 ```env
 TURSO_DATABASE_URL="file:./sqlite.db"
@@ -50,19 +45,6 @@ BETTER_AUTH_SECRET="your-super-secret-key-here"
 ### 2. Database Setup
 
 {{#if (eq database "postgres")}}
-Start your local database using Docker Compose:
-
-```bash
-npm run db:up
-```
-
-Generate and run migrations:
-
-```bash
-npm run db:generate
-npm run db:migrate
-```
-{{else if (eq database "mysql")}}
 Start your local database using Docker Compose:
 
 ```bash
@@ -110,7 +92,7 @@ Open [http://localhost:3000](http://localhost:3000) to see your application.
 
 - **Framework**: Next.js 15 with App Router
 - **Styling**: Tailwind CSS v4 + Shadcn/ui components
-- **Database**: {{#if (eq database "postgres")}}PostgreSQL{{else if (eq database "mysql")}}MySQL{{else if (eq database "sqlite")}}SQLite (Turso){{/if}} with Drizzle ORM
+- **Database**: {{#if (eq database "postgres")}}PostgreSQL{{else if (eq database "sqlite")}}SQLite (Turso){{/if}} with Drizzle ORM
 - **Authentication**: Better Auth with email/password
 - **API**: Hono.js with Zod validation
 - **State Management**: TanStack Query (React Query)
@@ -207,8 +189,6 @@ The application is ready for deployment on Vercel, Netlify, or any platform supp
 
 {{#if (eq database "postgres")}}
 For production, ensure your PostgreSQL database environment variables are properly configured.
-{{else if (eq database "mysql")}}
-For production, ensure your MySQL database environment variables are properly configured.
 {{else if (eq database "sqlite")}}
 For production with SQLite, consider using Turso for edge replication.
 {{/if}}

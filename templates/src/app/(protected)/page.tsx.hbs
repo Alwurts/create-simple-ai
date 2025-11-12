@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTodos } from "@/hooks/query/use-todos";
+import type { DBTodo } from "@/types/todos";
 
 export default function ProtectedPage() {
 	const { data: todos, isLoading, error } = useTodos();
@@ -80,7 +81,7 @@ export default function ProtectedPage() {
 			</div>
 
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{todos?.map((todo) => (
+				{todos?.map((todo: DBTodo) => (
 					<TodoItem key={todo.id} todo={todo} />
 				))}
 			</div>
