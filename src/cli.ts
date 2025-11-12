@@ -14,7 +14,6 @@ program
   .option("-d, --database <type>", "Database type (postgres|mysql|sqlite)")
   .option("--no-git", "Skip Git initialization", false)
   .option("--no-install", "Skip dependency installation", false)
-  .option("-p, --package-manager <manager>", "Package manager (npm|pnpm|bun)", "npm")
   .action(async (projectName, options) => {
     try {
       await createCommand(projectName, options);

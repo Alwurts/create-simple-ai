@@ -1,22 +1,9 @@
-import fs from "fs-extra";
 import type { PackageManager } from "../types.js";
 
 export async function detectPackageManager(): Promise<PackageManager> {
-  // Check for lock files in priority order
-  if (await fs.pathExists("bun.lockb")) {
-    return "bun";
-  }
-  if (await fs.pathExists("pnpm-lock.yaml")) {
-    return "pnpm";
-  }
-  if (await fs.pathExists("yarn.lock")) {
-    return "npm"; // yarn uses npm-compatible lock
-  }
-  if (await fs.pathExists("package-lock.json")) {
-    return "npm";
-  }
-
-  return "npm"; // default fallback
+  // For now, we only support npm
+  // Package manager detection can be added back later
+  return "npm";
 }
 
 export async function getPackageManagerCommand(

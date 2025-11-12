@@ -3,27 +3,20 @@ import { cleanupSmokeDirectory, expectSuccess, runTest } from "./test-utils.js";
 
 describe("Integration Tests", () => {
   afterEach(async () => {
-    await cleanupSmokeDirectory("npm-test-app");
-    await cleanupSmokeDirectory("pnpm-test-app");
-    await cleanupSmokeDirectory("bun-test-app");
+    await cleanupSmokeDirectory("test-app");
     await cleanupSmokeDirectory("git-test-app");
     await cleanupSmokeDirectory("no-git-test-app");
   });
 
-  it("should work with different package managers", async () => {
-    const packageManagers = ["npm", "pnpm", "bun"] as const;
+  it("should create a basic project", async () => {
+    const result = await runTest({
+      projectName: "test-app",
+      yes: true,
+      install: false,
+      git: false,
+    });
 
-    for (const packageManager of packageManagers) {
-      const result = await runTest({
-        projectName: `${packageManager}-test-app`,
-        packageManager,
-        yes: true,
-        install: false,
-        git: false,
-      });
-
-      expectSuccess(result);
-    }
+    expectSuccess(result);
   });
 
   it("should handle git initialization", async () => {

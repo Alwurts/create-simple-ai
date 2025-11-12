@@ -2,8 +2,8 @@ import path from "node:path";
 import pc from "picocolors";
 import { setupProject } from "../core/project-setup.js";
 import { logger } from "../lib/logger.js";
-import { detectPackageManager } from "../lib/package-manager.js";
-import { validateProjectDirectory, isInteractive } from "../lib/validation.js";
+import { getPackageManagerCommand } from "../lib/package-manager.js";
+import { isInteractive, validateProjectDirectory } from "../lib/validation.js";
 import { getDatabaseChoice } from "../prompts/database.js";
 import { getProjectName } from "../prompts/project-name.js";
 import type { CLIOptions, ProjectConfig } from "../types.js";
@@ -23,7 +23,7 @@ export async function createCommand(projectName?: string, options: CLIOptions = 
 
     logger.success(pc.green("✅ Project created successfully!"));
 
-    showNextSteps(validatedConfig);
+    await showNextSteps(validatedConfig);
   } catch (error) {
     logger.error("Failed to create project");
     throw error;
@@ -40,7 +40,7 @@ async function gatherConfiguration(
   const projectDir = path.resolve(process.cwd(), finalProjectName);
 
   const framework = "nextjs";
-  const packageManager = options.packageManager || (await detectPackageManager());
+  const packageManager = "npm";
 
   let database: ProjectConfig["database"];
   if (options.database) {
@@ -72,14 +72,16 @@ async function gatherConfiguration(
   return config;
 }
 
-function showNextSteps(config: ProjectConfig): void {
+async function showNextSteps(config: ProjectConfig): Promise<void> {
   console.log(`\n${pc.blue("📝 Next steps:")}`);
   console.log(`  cd ${config.projectName}`);
 
   if (!config.install) {
-    console.log(`  ${config.packageManager} install`);
+    const installCommand = await getPackageManagerCommand(config.packageManager, "install");
+    console.log(`  ${installCommand.join(" ")}`);
   }
 
-  console.log("  npm run dev  # or your preferred start command");
+  const runCommand = await getPackageManagerCommand(config.packageManager, "run", "dev");
+  console.log(`  ${runCommand.join(" ")}  # or your preferred start command`);
   console.log(`\n${pc.green("🎉 Happy coding!")}`);
 }

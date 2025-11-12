@@ -12,7 +12,7 @@ export interface TestResult {
   config: TestConfig;
 }
 
-export interface TestConfig extends CLIOptions {
+export interface TestConfig extends Omit<CLIOptions, "packageManager"> {
   projectName: string;
   expectError?: boolean;
   expectedErrorMessage?: string;
@@ -54,7 +54,7 @@ export async function runTest(config: TestConfig): Promise<TestResult> {
       database: config.database || "postgres",
       git: config.git ?? false,
       install: config.install ?? false,
-      packageManager: config.packageManager || "npm",
+      packageManager: "npm",
     };
 
     await setupProject(testConfig);
