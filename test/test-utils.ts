@@ -47,12 +47,20 @@ export async function runTest(config: TestConfig): Promise<TestResult> {
     await ensureDir(smokeDir);
 
     // Create a modified config that uses the smoke directory as the base
+    // Apply the same defaulting logic as the actual create command
+    const git = (() => {
+      if (config.git === true) return true;
+      if (config.git === false) return false;
+      if (config.yes) return true;
+      return false; // Default for tests when neither git option nor yes is specified
+    })();
+
     const testConfig = {
       projectName: config.projectName,
       projectDir,
       framework: "nextjs" as const,
       database: config.database || "postgres",
-      git: config.git ?? false,
+      git,
       install: config.install ?? false,
       packageManager: "npm",
     };
@@ -105,6 +113,24 @@ export async function expectFileExists(projectDir: string, filePath: string): Pr
   const fullPath = join(projectDir, filePath);
   const exists = await pathExists(fullPath);
   expect(exists).toBe(true);
+}
+
+/**
+ * Validate that git repository was initialized
+ */
+export async function expectGitInitialized(projectDir: string): Promise<void> {
+  const gitDir = join(projectDir, ".git");
+  const exists = await pathExists(gitDir);
+  expect(exists).toBe(true);
+}
+
+/**
+ * Validate that git repository was NOT initialized
+ */
+export async function expectGitNotInitialized(projectDir: string): Promise<void> {
+  const gitDir = join(projectDir, ".git");
+  const exists = await pathExists(gitDir);
+  expect(exists).toBe(false);
 }
 
 /**

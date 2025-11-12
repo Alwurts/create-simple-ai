@@ -12,6 +12,7 @@ program
   .argument("[project-name]", "Name of the project to create")
   .option("-y, --yes", "Skip prompts and use default options", false)
   .option("-d, --database <type>", "Database type (postgres|mysql|sqlite)")
+  .option("-g, --git", "Initialize a git repository")
   .option("--no-git", "Skip Git initialization", false)
   .option("--no-install", "Skip dependency installation", false)
   .action(async (projectName, options) => {

@@ -5,6 +5,7 @@ import { logger } from "../lib/logger.js";
 import { getPackageManagerCommand } from "../lib/package-manager.js";
 import { isInteractive, validateProjectDirectory } from "../lib/validation.js";
 import { getDatabaseChoice } from "../prompts/database.js";
+import { getGitChoice } from "../prompts/git.js";
 import { getProjectName } from "../prompts/project-name.js";
 import type { CLIOptions, ProjectConfig } from "../types.js";
 import { ProjectConfigSchema } from "../types.js";
@@ -55,7 +56,20 @@ async function gatherConfiguration(
     );
   }
 
-  const git = options.git ?? true;
+  let git: boolean;
+  if (options.git === true) {
+    git = true;
+  } else if (options.git === false) {
+    git = false;
+  } else if (options.yes) {
+    git = true;
+  } else if (isInteractive()) {
+    git = await getGitChoice();
+  } else {
+    throw new Error(
+      "Git initialization must be specified with --git or --no-git when not in interactive mode. Use --yes to use default settings.",
+    );
+  }
 
   const install = options.install ?? true;
 

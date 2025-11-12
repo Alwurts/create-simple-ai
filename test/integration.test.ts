@@ -1,11 +1,14 @@
 import { afterEach, describe, it } from "vitest";
-import { cleanupSmokeDirectory, expectSuccess, runTest } from "./test-utils.js";
+import { cleanupSmokeDirectory, expectSuccess, expectSuccessWithProjectDir, expectGitInitialized, expectGitNotInitialized, runTest } from "./test-utils.js";
 
 describe("Integration Tests", () => {
   afterEach(async () => {
     await cleanupSmokeDirectory("test-app");
     await cleanupSmokeDirectory("git-test-app");
     await cleanupSmokeDirectory("no-git-test-app");
+    await cleanupSmokeDirectory("git-yes-app");
+    await cleanupSmokeDirectory("git-explicit-app");
+    await cleanupSmokeDirectory("no-git-explicit-app");
   });
 
   it("should create a basic project", async () => {
@@ -27,7 +30,8 @@ describe("Integration Tests", () => {
       git: true,
     });
 
-    expectSuccess(result);
+    const projectDir = expectSuccessWithProjectDir(result);
+    await expectGitInitialized(projectDir);
   });
 
   it("should handle no git initialization", async () => {
@@ -38,6 +42,40 @@ describe("Integration Tests", () => {
       git: false,
     });
 
-    expectSuccess(result);
+    const projectDir = expectSuccessWithProjectDir(result);
+    await expectGitNotInitialized(projectDir);
+  });
+
+  it("should initialize git by default with --yes", async () => {
+    const result = await runTest({
+      projectName: "git-yes-app",
+      yes: true,
+      install: false,
+    });
+
+    const projectDir = expectSuccessWithProjectDir(result);
+    await expectGitInitialized(projectDir);
+  });
+
+  it("should initialize git when explicitly requested", async () => {
+    const result = await runTest({
+      projectName: "git-explicit-app",
+      git: true,
+      install: false,
+    });
+
+    const projectDir = expectSuccessWithProjectDir(result);
+    await expectGitInitialized(projectDir);
+  });
+
+  it("should skip git when explicitly disabled", async () => {
+    const result = await runTest({
+      projectName: "no-git-explicit-app",
+      git: false,
+      install: false,
+    });
+
+    const projectDir = expectSuccessWithProjectDir(result);
+    await expectGitNotInitialized(projectDir);
   });
 });
