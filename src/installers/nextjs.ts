@@ -20,5 +20,5 @@ export const nextjsInstaller: Installer = async config => {
     packageManagerCommand: config.packageManager,
     versions: PACKAGE_VERSIONS as Record<string, string>,
   };
-  await processTemplates(srcTemplateDir, config.projectDir, context);
+  await processTemplates(srcTemplateDir, path.join(config.projectDir, "src"), context);
 };

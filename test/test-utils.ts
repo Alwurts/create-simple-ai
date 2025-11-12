@@ -172,20 +172,20 @@ export async function validateDatabaseConfig(projectDir: string, database: strin
   }
 
   // Check schema file
-  await expectFileExists(projectDir, "lib/db/schema.ts");
-  await expectFileExists(projectDir, "lib/db/index.ts");
+  await expectFileExists(projectDir, "src/db/schema/index.ts");
+  await expectFileExists(projectDir, "src/db/index.ts");
 }
 
 /**
  * Validate auth setup
  */
 export async function validateAuthSetup(projectDir: string): Promise<void> {
-  await expectFileExists(projectDir, "lib/auth.ts");
-  await expectFileExists(projectDir, "lib/auth-client.ts");
-  await expectFileExists(projectDir, "db/schema/auth.ts");
+  await expectFileExists(projectDir, "src/lib/auth.ts");
+  await expectFileExists(projectDir, "src/lib/auth-client.ts");
+  await expectFileExists(projectDir, "src/db/schema/auth.ts");
 
   // Check auth config imports better-auth
-  await expectFileContains(projectDir, "lib/auth.ts", "better-auth");
+  await expectFileContains(projectDir, "src/lib/auth.ts", "better-auth");
 }
 
 /**
@@ -200,11 +200,11 @@ export async function validateProjectStructure(projectDir: string): Promise<void
   await expectFileExists(projectDir, ".gitignore");
 
   // Next.js files
-  await expectFileExists(projectDir, "app/layout.tsx");
-  await expectFileExists(projectDir, "app/(protected)/page.tsx");
-  await expectFileExists(projectDir, "app/globals.css");
+  await expectFileExists(projectDir, "src/app/layout.tsx");
+  await expectFileExists(projectDir, "src/app/(protected)/page.tsx");
+  await expectFileExists(projectDir, "src/app/globals.css");
 
   // Library files
-  await expectFileExists(projectDir, "lib/utils.ts");
-  await expectFileExists(projectDir, "lib/config.ts");
+  await expectFileExists(projectDir, "src/lib/utils.ts");
+  await expectFileExists(projectDir, "src/lib/config.ts");
 }
