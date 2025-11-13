@@ -43,6 +43,16 @@ async function gatherConfiguration(
 	const framework = "nextjs";
 	const packageManager = "npm";
 
+	let install: boolean;
+	if (options.install === true) {
+		install = true;
+	} else if (options.install === false) {
+		install = false;
+	} else {
+		// Install dependencies by default
+		install = true;
+	}
+
 	let git: boolean;
 	if (options.git === true) {
 		git = true;
@@ -55,21 +65,6 @@ async function gatherConfiguration(
 	} else {
 		throw new Error(
 			"Git initialization must be specified with --git or --no-git when not in interactive mode. Use --yes to use default settings.",
-		);
-	}
-
-	let install: boolean;
-	if (options.install === true) {
-		install = true;
-	} else if (options.install === false) {
-		install = false;
-	} else if (options.yes) {
-		install = true;
-	} else if (isInteractive()) {
-		install = await getInstallChoice();
-	} else {
-		throw new Error(
-			"Dependency installation must be specified with --install or --no-install when not in interactive mode. Use --yes to use default settings.",
 		);
 	}
 
