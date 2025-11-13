@@ -1,5 +1,11 @@
 # create-simple-ai
 
+## 0.2.1
+
+### Patch Changes
+
+- Fix config issues for production use
+
 ## 0.2.0
 
 ### Minor Changes
