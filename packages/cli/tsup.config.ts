@@ -1,4 +1,8 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "tsup";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
 	entry: ["src/cli.ts"],
@@ -10,7 +14,7 @@ export default defineConfig({
 	},
 	shims: false,
 	// Copy the templates directory into the dist folder
-	publicDir: "../../packages/templates",
+	publicDir: path.resolve(__dirname, "../../packages/templates"),
 	// Ensure the file is executable
 	outExtension() {
 		return {
