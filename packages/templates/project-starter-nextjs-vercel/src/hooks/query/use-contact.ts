@@ -9,11 +9,7 @@ export type ContactFormData = {
 
 export function useContact() {
 	return useMutation({
-		mutationFn: async (contactData: {
-			name: string;
-			email: string;
-			message: string;
-		}) => {
+		mutationFn: async (contactData: { name: string; email: string; message: string }) => {
 			const response = await apiClient.api.contact.$post({ json: contactData });
 			const data = await response.json();
 			if (!response.ok) {

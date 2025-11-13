@@ -44,20 +44,13 @@ export default function LoginPage() {
 			<Card className="w-full max-w-sm">
 				<CardHeader>
 					<CardTitle>Login</CardTitle>
-					<CardDescription>
-						Welcome back! Please enter your details.
-					</CardDescription>
+					<CardDescription>Welcome back! Please enter your details.</CardDescription>
 				</CardHeader>
 				<form onSubmit={handleLogin}>
 					<CardContent className="space-y-4">
 						<div className="space-y-2">
 							<Label htmlFor="email">Email</Label>
-							<Input
-								id="email"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
-								required
-							/>
+							<Input id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="password">Password</Label>

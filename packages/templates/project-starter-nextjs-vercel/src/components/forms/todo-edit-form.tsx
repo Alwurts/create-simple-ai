@@ -32,12 +32,7 @@ interface TodoEditFormProps {
 	initialData: Pick<DBTodo, "title" | "description" | "completed">;
 }
 
-export function TodoEditForm({
-	todoId,
-	onSuccess,
-	onCancel,
-	initialData,
-}: TodoEditFormProps) {
+export function TodoEditForm({ todoId, onSuccess, onCancel, initialData }: TodoEditFormProps) {
 	const form = useForm<TodoEditFormData>({
 		resolver: zodResolver(todoEditFormSchema),
 		defaultValues: {
@@ -107,11 +102,7 @@ export function TodoEditForm({
 				/>
 
 				<div className="flex gap-2">
-					<Button
-						type="submit"
-						disabled={updateTodoMutation.isPending}
-						size="sm"
-					>
+					<Button type="submit" disabled={updateTodoMutation.isPending} size="sm">
 						{updateTodoMutation.isPending ? "Saving..." : "Save"}
 					</Button>
 					<Button type="button" variant="outline" size="sm" onClick={onCancel}>

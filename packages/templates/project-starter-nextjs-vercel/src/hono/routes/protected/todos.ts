@@ -1,12 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import {
-	createTodo,
-	deleteTodo,
-	getTodoById,
-	getTodos,
-	updateTodo,
-} from "@/db/services/todos";
+import { createTodo, deleteTodo, getTodoById, getTodos, updateTodo } from "@/db/services/todos";
 import type { HonoContextWithAuth } from "@/types/hono";
 import { createTodoSchema, updateTodoSchema } from "@/types/todos";
 

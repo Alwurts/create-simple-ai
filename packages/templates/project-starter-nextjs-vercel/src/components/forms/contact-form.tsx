@@ -57,9 +57,7 @@ export function ContactForm({ isLoading = false }: ContactFormProps) {
 							<FormControl>
 								<Input placeholder="Enter your name" {...field} />
 							</FormControl>
-							<FormDescription>
-								This is your public display name.
-							</FormDescription>
+							<FormDescription>This is your public display name.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -72,15 +70,9 @@ export function ContactForm({ isLoading = false }: ContactFormProps) {
 						<FormItem>
 							<FormLabel>Email</FormLabel>
 							<FormControl>
-								<Input
-									type="email"
-									placeholder="Enter your email address"
-									{...field}
-								/>
+								<Input type="email" placeholder="Enter your email address" {...field} />
 							</FormControl>
-							<FormDescription>
-								We'll never share your email with anyone else.
-							</FormDescription>
+							<FormDescription>We'll never share your email with anyone else.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -93,15 +85,9 @@ export function ContactForm({ isLoading = false }: ContactFormProps) {
 						<FormItem>
 							<FormLabel>Message</FormLabel>
 							<FormControl>
-								<Textarea
-									placeholder="Enter your message"
-									className="resize-none"
-									{...field}
-								/>
+								<Textarea placeholder="Enter your message" className="resize-none" {...field} />
 							</FormControl>
-							<FormDescription>
-								Please provide details about your inquiry.
-							</FormDescription>
+							<FormDescription>Please provide details about your inquiry.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}

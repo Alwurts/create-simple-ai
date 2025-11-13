@@ -46,8 +46,7 @@ export function useCreateTodo() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (todo: CreateTodoSchema) =>
-			apiClient.api.todos.$post({ json: todo }),
+		mutationFn: (todo: CreateTodoSchema) => apiClient.api.todos.$post({ json: todo }),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: getTodosKey() });
 		},
@@ -74,8 +73,7 @@ export function useDeleteTodo() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (id: string) =>
-			apiClient.api.todos[":todoId"].$delete({ param: { todoId: id } }),
+		mutationFn: (id: string) => apiClient.api.todos[":todoId"].$delete({ param: { todoId: id } }),
 		onSuccess: (_, id) => {
 			queryClient.invalidateQueries({ queryKey: getTodosKey() });
 			queryClient.removeQueries({ queryKey: getTodoKey(id) });

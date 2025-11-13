@@ -50,9 +50,7 @@ export default function ProtectedPage() {
 		return (
 			<div className="container mx-auto p-6">
 				<div className="text-center">
-					<h1 className="text-2xl font-bold text-red-600 mb-4">
-						Error loading todos
-					</h1>
+					<h1 className="text-2xl font-bold text-red-600 mb-4">Error loading todos</h1>
 					<p className="text-gray-600">Please try again later.</p>
 				</div>
 			</div>
@@ -88,12 +86,8 @@ export default function ProtectedPage() {
 			{todos?.length === 0 && (
 				<div className="text-center py-12">
 					<Circle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-					<h2 className="text-xl font-semibold text-gray-600 mb-2">
-						No todos yet
-					</h2>
-					<p className="text-gray-500">
-						Create your first todo to get started!
-					</p>
+					<h2 className="text-xl font-semibold text-gray-600 mb-2">No todos yet</h2>
+					<p className="text-gray-500">Create your first todo to get started!</p>
 				</div>
 			)}
 		</div>

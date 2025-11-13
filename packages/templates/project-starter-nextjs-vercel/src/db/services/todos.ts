@@ -4,14 +4,8 @@ import { db } from "..";
 import { todo } from "../schema/todos";
 import type { DatabaseClient } from "../types";
 
-export const getTodos = async (
-	{ userId }: { userId: string },
-	dbClient: DatabaseClient = db,
-) => {
-	const todos = await dbClient
-		.select()
-		.from(todo)
-		.where(eq(todo.userId, userId));
+export const getTodos = async ({ userId }: { userId: string }, dbClient: DatabaseClient = db) => {
+	const todos = await dbClient.select().from(todo).where(eq(todo.userId, userId));
 	return todos;
 };
 
@@ -38,11 +32,7 @@ export const createTodo = async (
 };
 
 export const updateTodo = async (
-	{
-		id,
-		userId,
-		updates,
-	}: { id: string; userId: string; updates: Partial<CreateTodoSchema> },
+	{ id, userId, updates }: { id: string; userId: string; updates: Partial<CreateTodoSchema> },
 	dbClient: DatabaseClient = db,
 ) => {
 	const updatedTodo = await dbClient

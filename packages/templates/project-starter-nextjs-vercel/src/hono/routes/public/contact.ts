@@ -6,10 +6,7 @@ import type { HonoContext } from "@/types/hono";
 const contactSchema = z.object({
 	name: z.string().min(1).describe("Name is required"),
 	email: z.email().describe("Invalid email address"),
-	message: z
-		.string()
-		.min(10)
-		.describe("Message must be at least 10 characters"),
+	message: z.string().min(10).describe("Message must be at least 10 characters"),
 });
 
 const contactRoutes = new Hono<HonoContext>()

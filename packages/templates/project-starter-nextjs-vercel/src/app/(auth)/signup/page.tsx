@@ -51,12 +51,7 @@ export default function SignUpPage() {
 					<CardContent className="space-y-4">
 						<div className="space-y-2">
 							<Label htmlFor="name">Name</Label>
-							<Input
-								id="name"
-								value={name}
-								onChange={(e) => setName(e.target.value)}
-								required
-							/>
+							<Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="email">Email</Label>

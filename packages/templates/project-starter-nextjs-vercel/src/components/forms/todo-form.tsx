@@ -89,10 +89,7 @@ export function TodoForm({ defaultValues, onSuccess }: TodoFormProps) {
 					render={({ field }) => (
 						<FormItem className="flex flex-row items-start space-x-3 space-y-0">
 							<FormControl>
-								<Checkbox
-									checked={field.value}
-									onCheckedChange={field.onChange}
-								/>
+								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
 							</FormControl>
 							<div className="space-y-1 leading-none">
 								<FormLabel>Mark as completed</FormLabel>
@@ -101,11 +98,7 @@ export function TodoForm({ defaultValues, onSuccess }: TodoFormProps) {
 					)}
 				/>
 
-				<Button
-					type="submit"
-					disabled={createTodoMutation.isPending}
-					className="w-full"
-				>
+				<Button type="submit" disabled={createTodoMutation.isPending} className="w-full">
 					{createTodoMutation.isPending ? "Creating..." : "Create Todo"}
 				</Button>
 			</form>

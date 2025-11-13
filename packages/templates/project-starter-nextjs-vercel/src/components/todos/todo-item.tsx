@@ -60,11 +60,7 @@ export function TodoItem({ todo }: TodoItemProps) {
 					<>
 						<p className="text-gray-600 mb-4">{todo.description}</p>
 						<div className="flex justify-between items-center">
-							<Button
-								variant="outline"
-								size="sm"
-								onClick={() => setIsEditing(true)}
-							>
+							<Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
 								<Edit2 className="w-4 h-4 mr-1" />
 								Edit
 							</Button>

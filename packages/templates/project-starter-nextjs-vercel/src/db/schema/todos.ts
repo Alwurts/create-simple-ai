@@ -10,12 +10,6 @@ export const todo = pgTable("todo", (t) => ({
 		.text("user_id")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
-	createdAt: t
-		.timestamp("created_at", { mode: "string" })
-		.defaultNow()
-		.notNull(),
-	updatedAt: t
-		.timestamp("updated_at", { mode: "string" })
-		.defaultNow()
-		.notNull(),
+	createdAt: t.timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
+	updatedAt: t.timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
 }));
