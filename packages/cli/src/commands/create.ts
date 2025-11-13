@@ -89,6 +89,6 @@ async function showNextSteps(config: ProjectConfig): Promise<void> {
 	}
 
 	const runCommand = await getPackageManagerCommand(config.packageManager, "run", "dev");
-	console.log(`  ${runCommand.join(" ")}  # or your preferred start command`);
+	console.log(`  ${runCommand.join(" ")}`);
 	console.log(`\n${pc.green("🎉 Happy coding!")}`);
 }
