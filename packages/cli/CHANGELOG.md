@@ -1,5 +1,11 @@
 # create-simple-ai
 
+## 0.2.4
+
+### Patch Changes
+
+- Change how dotfiles are copied
+
 ## 0.2.3
 
 ### Patch Changes
