@@ -1,5 +1,11 @@
 # create-simple-ai
 
+## 0.2.2
+
+### Patch Changes
+
+- Add missing dot files when copying
+
 ## 0.2.1
 
 ### Patch Changes
