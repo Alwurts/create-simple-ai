@@ -1,7 +1,10 @@
 {
 	"name": "create-simple-ai",
-	"version": "0.4.0",
+	"version": "0.1.0",
 	"description": "Create simple AI-powered full-stack applications",
+	"publishConfig": {
+		"access": "public"
+	},
 	"type": "module",
 	"bin": {
 		"create-simple-ai": "./dist/cli.js"
