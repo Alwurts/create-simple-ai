@@ -46,7 +46,8 @@ describe("Git Prompt", () => {
 		const mockConfirm = vi.mocked(p.confirm);
 		const mockIsCancel = vi.mocked(p.isCancel);
 
-		mockConfirm.mockResolvedValue(undefined); // Cancelled
+		// Mock confirm to return a value that will be checked by isCancel
+		mockConfirm.mockResolvedValue({} as any); // Mock cancelled value
 		mockIsCancel.mockReturnValue(true);
 
 		await expect(getGitChoice()).rejects.toThrow("Operation cancelled");
@@ -84,7 +85,8 @@ describe("Install Prompt", () => {
 		const mockConfirm = vi.mocked(p.confirm);
 		const mockIsCancel = vi.mocked(p.isCancel);
 
-		mockConfirm.mockResolvedValue(undefined); // Cancelled
+		// Mock confirm to return a value that will be checked by isCancel
+		mockConfirm.mockResolvedValue({} as any); // Mock cancelled value
 		mockIsCancel.mockReturnValue(true);
 
 		await expect(getInstallChoice()).rejects.toThrow("Operation cancelled");
