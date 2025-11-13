@@ -1,5 +1,11 @@
 # create-simple-ai
 
+## 0.2.3
+
+### Patch Changes
+
+- Add readme to package back
+
 ## 0.2.2
 
 ### Patch Changes

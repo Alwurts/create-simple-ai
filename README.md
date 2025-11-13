@@ -32,50 +32,7 @@ npx create-simple-ai my-app --database postgres --yes
 - `--no-install` - Skip dependency installation
 - `--package-manager <manager>` - Package manager: `npm`, `pnpm`, or `bun` (default: auto-detected)
 
-## What Gets Created
-
-- Next.js app with App Router
-- Tailwind CSS configuration
-- Drizzle ORM setup with database schema
-- Better Auth configuration
-- Hono API routes
-- Biome configuration
-- TypeScript configuration
-- All necessary dependencies
-
-## Development
-
-```bash
-# Install dependencies
-npm install
-
-# Build
-npm run build
-
-# Run tests
-npm test
-
-# Lint
-npm run lint
-
-# Type check
-npm run typecheck
-```
-
-## Testing
-
-See [TESTING.md](./TESTING.md) for detailed testing instructions.
-
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch
-3. Add a changeset: `npm run changeset`
-4. Make your changes
-5. Run tests: `npm test`
-6. Submit a pull request
-
-## License
-
-MIT
+We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
