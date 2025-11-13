@@ -1,18 +1,12 @@
 #!/usr/bin/env node
 
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { confirm, isCancel } from "@clack/prompts";
 import { execa } from "execa";
 import fs from "fs-extra";
 import pc from "picocolors";
 
-// Find the monorepo root (3 levels up from scripts/ directory)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const MONOREPO_ROOT = join(__dirname, "../../..");
-
-const PACKAGE_JSON_PATH = join(MONOREPO_ROOT, "package.json");
+const PACKAGE_JSON_PATH = join(process.cwd(), "package.json");
 
 async function getCurrentVersion(): Promise<string> {
 	const packageJson = JSON.parse(await fs.readFile(PACKAGE_JSON_PATH, "utf-8"));

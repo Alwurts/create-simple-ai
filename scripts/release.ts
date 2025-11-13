@@ -1,18 +1,12 @@
 #!/usr/bin/env node
 
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { confirm, isCancel, select, text } from "@clack/prompts";
 import { execa } from "execa";
 import fs from "fs-extra";
 import pc from "picocolors";
 
-// Find the monorepo root (3 levels up from scripts/ directory)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const MONOREPO_ROOT = join(__dirname, "../../..");
-
-const PACKAGE_JSON_PATH = join(MONOREPO_ROOT, "package.json");
+const PACKAGE_JSON_PATH = join(process.cwd(), "package.json");
 
 interface ReleaseOptions {
 	dryRun: boolean;
@@ -135,14 +129,14 @@ async function runPreReleaseChecks(dryRun: boolean, skipValidation: boolean): Pr
 	if (dryRun) {
 		// In dry-run, we still run checks but don't fail
 		try {
-			await execa("tsx", ["./pre-release-check.ts", "--dry-run"], {
+			await execa("tsx", ["scripts/pre-release-check.ts", "--dry-run"], {
 				stdio: "inherit",
 			});
 		} catch {
 			// Ignore errors in dry-run mode
 		}
 	} else {
-		await execa("tsx", ["./pre-release-check.ts"], {
+		await execa("tsx", ["scripts/pre-release-check.ts"], {
 			stdio: "inherit",
 		});
 	}
@@ -169,7 +163,7 @@ async function showChangelogPreview(dryRun: boolean): Promise<void> {
 	}
 
 	try {
-		const changelogPath = join(MONOREPO_ROOT, "CHANGELOG.md");
+		const changelogPath = join(process.cwd(), "CHANGELOG.md");
 		const changelog = await fs.readFile(changelogPath, "utf-8");
 		const firstEntry = changelog.split("\n---\n")[0];
 
