@@ -1,9 +1,15 @@
 #!/usr/bin/env node
 
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { execa } from "execa";
 import fs from "fs-extra";
 import pc from "picocolors";
+
+// Find the monorepo root (3 levels up from scripts/ directory)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const MONOREPO_ROOT = join(__dirname, "../../..");
 
 interface CheckResult {
 	name: string;
@@ -117,7 +123,7 @@ async function checkNpmAuth(): Promise<boolean | string> {
 
 async function checkPackageJson(): Promise<boolean | string> {
 	try {
-		const packageJsonPath = join(process.cwd(), "package.json");
+		const packageJsonPath = join(MONOREPO_ROOT, "package.json");
 		const content = await fs.readFile(packageJsonPath, "utf-8");
 		JSON.parse(content);
 		return true;
@@ -127,10 +133,10 @@ async function checkPackageJson(): Promise<boolean | string> {
 }
 
 async function checkTemplates(): Promise<boolean | string> {
-	const templatesPath = join(process.cwd(), "templates");
+	const templatesPath = join(MONOREPO_ROOT, "packages/templates");
 	const exists = await fs.pathExists(templatesPath);
 	if (!exists) {
-		return "templates/ directory not found.";
+		return "packages/templates/ directory not found.";
 	}
 	return true;
 }

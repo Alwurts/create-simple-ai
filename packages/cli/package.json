@@ -19,7 +19,12 @@
 		"test:ui": "vitest --ui",
 		"lint": "biome check --write .",
 		"typecheck": "tsc --noEmit",
-		"prepublishOnly": "npm run build"
+		"prepublishOnly": "npm run build",
+		"pre-release": "tsx scripts/pre-release-check.ts",
+		"release": "tsx scripts/release.ts",
+		"release:dry-run": "tsx scripts/release.ts --dry-run",
+		"canary": "tsx scripts/canary-release.ts",
+		"canary:dry-run": "tsx scripts/canary-release.ts --dry-run"
 	},
 	"dependencies": {
 		"@clack/prompts": "^0.11.0",

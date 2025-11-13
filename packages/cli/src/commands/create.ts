@@ -5,7 +5,6 @@ import { logger } from "../lib/logger.js";
 import { getPackageManagerCommand } from "../lib/package-manager.js";
 import { isInteractive, validateProjectDirectory } from "../lib/validation.js";
 import { getGitChoice } from "../prompts/git.js";
-import { getInstallChoice } from "../prompts/install.js";
 import { getProjectName } from "../prompts/project-name.js";
 import type { CLIOptions, ProjectConfig } from "../types.js";
 import { ProjectConfigSchema } from "../types.js";

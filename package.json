@@ -16,11 +16,11 @@
 		"changeset": "changeset",
 		"changeset:status": "changeset status",
 		"changeset:version": "changeset version",
-		"pre-release": "tsx scripts/pre-release-check.ts",
-		"release": "tsx scripts/release.ts",
-		"release:dry-run": "tsx scripts/release.ts --dry-run",
-		"canary": "tsx scripts/canary-release.ts",
-		"canary:dry-run": "tsx scripts/canary-release.ts --dry-run",
+		"pre-release": "npm run pre-release -w create-simple-ai",
+		"release": "npm run release -w create-simple-ai",
+		"release:dry-run": "npm run release:dry-run -w create-simple-ai",
+		"canary": "npm run canary -w create-simple-ai",
+		"canary:dry-run": "npm run canary:dry-run -w create-simple-ai",
 		"version": "changeset version"
 	},
 	"devDependencies": {
