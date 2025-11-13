@@ -117,12 +117,12 @@ async function checkNpmAuth(): Promise<boolean | string> {
 
 async function checkPackageJson(): Promise<boolean | string> {
 	try {
-		const packageJsonPath = join(process.cwd(), "package.json");
+		const packageJsonPath = join(process.cwd(), "packages/cli/package.json");
 		const content = await fs.readFile(packageJsonPath, "utf-8");
 		JSON.parse(content);
 		return true;
 	} catch {
-		return "package.json is invalid or cannot be read.";
+		return "CLI package.json is invalid or cannot be read.";
 	}
 }
 

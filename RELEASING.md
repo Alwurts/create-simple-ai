@@ -52,6 +52,37 @@ Fixed bug in template processing
 - Before releasing (if you forgot)
 - After merging PRs (if contributor didn't add one)
 
+## Monorepo Setup
+
+This project uses a monorepo structure with multiple packages:
+
+- **`create-simple-ai-mono`** (root): Private workspace root, not published
+- **`create-simple-ai`** (packages/cli): The main CLI package that gets published to npm
+- **`project-starter-nextjs-vercel`** (packages/templates): Template package, bundled into CLI
+
+### Important Monorepo Notes
+
+1. **Only the CLI package gets versioned and published** - The root and template packages are ignored by changesets
+2. **Template changes require changesets for the CLI package** - When you update templates, create a changeset for `create-simple-ai`
+3. **When prompted by `npm run changeset`, always select `create-simple-ai`** - This is the only package that gets versioned
+4. **Templates are bundled into the CLI package** - They don't need separate versioning
+
+### Example: Updating Templates
+
+```bash
+# 1. Make changes to a template file
+edit packages/templates/project-starter-nextjs-vercel/src/app/page.tsx
+
+# 2. Create changeset for CLI package
+npm run changeset
+# Select: create-simple-ai
+# Type: patch/minor/major depending on change
+# Description: Updated landing page in Next.js template
+
+# 3. Release CLI with updated templates inside
+npm run release
+```
+
 ## Release Process
 
 ### Step 1: Pre-Release Checks
@@ -364,6 +395,33 @@ npm run release
 ```bash
 git checkout main
 npm run release
+```
+
+### "Changeset asks for wrong package"
+
+**Problem:** When running `npm run changeset`, you see packages you don't expect (like root or templates).
+
+**Solution:**
+```bash
+# In monorepo setup, always select "create-simple-ai" when prompted
+npm run changeset
+# Select: create-simple-ai (the CLI package)
+# Only this package gets versioned and published
+```
+
+### "Template changes don't appear in release"
+
+**Problem:** You updated templates but they don't appear in the published package.
+
+**Solution:**
+Templates are bundled into the CLI package. Make sure to create a changeset for the CLI package:
+
+```bash
+# After updating templates
+npm run changeset
+# Select: create-simple-ai
+# Type: patch/minor/major
+# Description: Updated templates - [describe changes]
 ```
 
 ## CI/CD Integration (Optional)

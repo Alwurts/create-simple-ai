@@ -6,7 +6,7 @@ import { execa } from "execa";
 import fs from "fs-extra";
 import pc from "picocolors";
 
-const PACKAGE_JSON_PATH = join(process.cwd(), "package.json");
+const PACKAGE_JSON_PATH = join(process.cwd(), "packages/cli/package.json");
 
 interface ReleaseOptions {
 	dryRun: boolean;
