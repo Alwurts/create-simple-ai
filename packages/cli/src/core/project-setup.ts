@@ -21,18 +21,31 @@ export async function setupProject(config: ProjectConfig): Promise<void> {
 		logger.info(`Copying starter template from ${templateName}...`);
 		await fs.copy(templateDir, config.projectDir);
 
-		// 4. Post-process: Update package.json
+		// 4. Rename dotfiles back to their proper names (Git doesn't track dotfiles well)
+		const gitignoreSrc = path.join(config.projectDir, "gitignore");
+		const gitignoreDest = path.join(config.projectDir, ".gitignore");
+		if (await fs.pathExists(gitignoreSrc)) {
+			await fs.rename(gitignoreSrc, gitignoreDest);
+		}
+
+		const envExampleSrc = path.join(config.projectDir, "env.example");
+		const envExampleDest = path.join(config.projectDir, ".env.example");
+		if (await fs.pathExists(envExampleSrc)) {
+			await fs.rename(envExampleSrc, envExampleDest);
+		}
+
+		// 6. Post-process: Update package.json
 		const packageJsonPath = path.join(config.projectDir, "package.json");
 		const packageJson = await fs.readJSON(packageJsonPath);
 		packageJson.name = config.projectName;
 		await fs.writeJSON(packageJsonPath, packageJson, { spaces: 2 });
 
-		// 5. Install dependencies
+		// 7. Install dependencies
 		if (config.install) {
 			await installDependencies(config);
 		}
 
-		// 6. Initialize Git repository
+		// 8. Initialize Git repository
 		if (config.git) {
 			await initializeGit(config.projectDir);
 		}

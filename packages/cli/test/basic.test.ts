@@ -3,6 +3,7 @@ import { pathExists, readJSON } from "fs-extra";
 import { afterEach, describe, expect, it } from "vitest";
 import {
 	cleanupSmokeDirectory,
+	expectFileContains,
 	expectFileExists,
 	expectGitInitialized,
 	expectGitNotInitialized,
@@ -19,6 +20,7 @@ describe("Basic Project Creation", () => {
 		await cleanupSmokeDirectory("git-app");
 		await cleanupSmokeDirectory("no-git-app");
 		await cleanupSmokeDirectory("no-install-app");
+		await cleanupSmokeDirectory("dotfile-app");
 	});
 
 	it("should copy the vercel template and rename the project in package.json", async () => {
@@ -95,5 +97,29 @@ describe("Basic Project Creation", () => {
 		expect(packageLockExists).toBe(false);
 
 		// node_modules exists because it's copied from the template, but no package-lock.json means npm install wasn't run
+	});
+
+	it("should create project with proper dotfiles (.gitignore and .env.example)", async () => {
+		const result = await runTest({
+			projectName: "dotfile-app",
+			yes: true,
+			install: false,
+			git: false,
+		});
+
+		expectSuccess(result);
+		const projectDir = expectSuccessWithProjectDir(result);
+
+		// Check that dotfiles exist and have correct content
+		await expectFileExists(projectDir, ".gitignore");
+		await expectFileExists(projectDir, ".env.example");
+
+		// Check .gitignore contains Next.js specific ignores
+		await expectFileContains(projectDir, ".gitignore", ".next/");
+		await expectFileContains(projectDir, ".gitignore", "/build");
+
+		// Check .env.example contains required environment variables
+		await expectFileContains(projectDir, ".env.example", "POSTGRES_URL");
+		await expectFileContains(projectDir, ".env.example", "BETTER_AUTH_SECRET");
 	});
 });
