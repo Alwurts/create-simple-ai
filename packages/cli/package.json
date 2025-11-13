@@ -2,6 +2,10 @@
 	"name": "create-simple-ai",
 	"version": "0.2.4",
 	"description": "Create simple AI-powered full-stack applications",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Alwurts/create-simple-ai.git"
+	},
 	"publishConfig": {
 		"access": "public"
 	},

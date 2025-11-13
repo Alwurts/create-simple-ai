@@ -85,6 +85,7 @@ The `release` command pushed the tags, but you still need to push the versioning
 
 ```bash
 git push origin main
+git push origin --tags
 ```
 
 Congratulations, the release is complete!
